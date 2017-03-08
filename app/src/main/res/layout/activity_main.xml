@@ -11,20 +11,57 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="patrik.onlab_start.MainActivity">
 
-    <fragment
-        android:name="patrik.onlab_start.MessageListFragment"
-        android:id="@+id/messageFragment"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        tools:layout="@android:layout/simple_list_item_1">
+        android:weightSum="10">
 
-    </fragment>
+        <fragment
+            android:name="patrik.onlab_start.MessageListFragment"
+            android:id="@+id/messageFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            tools:layout="@android:layout/simple_list_item_1">
+        </fragment>
+
+        <TextView
+            android:layout_weight="9"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="VMI MAJD"
+            android:textSize="20dp"/>
+
+    </LinearLayout>
+
+
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:weightSum="2">
+
+        <fragment
+            android:name="patrik.onlab_start.MessageDetailsFragment"
+            android:id="@+id/detailsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+        </fragment>
+
+        <fragment
+            android:name="patrik.onlab_start.GraphFragment"
+            android:id="@+id/graphFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+        </fragment>
 
     </LinearLayout>
 
