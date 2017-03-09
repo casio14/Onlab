@@ -18,14 +18,22 @@
         android:layout_weight="1"
         android:weightSum="10">
 
-        <fragment
-            android:name="patrik.onlab_start.MessageListFragment"
-            android:id="@+id/messageFragment"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:padding="3dp"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
-            tools:layout="@android:layout/simple_list_item_1">
-        </fragment>
+            android:background="@drawable/rounded_fragment_stlye">
+
+            <fragment
+                android:name="patrik.onlab_start.MessageListFragment"
+                android:id="@+id/messageFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </fragment>
+
+        </FrameLayout>
 
         <TextView
             android:layout_weight="9"
@@ -45,23 +53,37 @@
         android:layout_weight="1"
         android:weightSum="2">
 
-        <fragment
-            android:name="patrik.onlab_start.MessageDetailsFragment"
-            android:id="@+id/detailsFragment"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="1dp"
+            android:padding="3dp"
             android:layout_weight="1">
 
-        </fragment>
+            <fragment
+                android:name="patrik.onlab_start.MessageDetailsFragment"
+                android:id="@+id/detailsFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </fragment>
 
-        <fragment
-            android:name="patrik.onlab_start.GraphFragment"
-            android:id="@+id/graphFragment"
+        </FrameLayout>
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="1dp"
+            android:padding="3dp"
             android:layout_weight="1">
 
-        </fragment>
+            <fragment
+                android:name="patrik.onlab_start.GraphFragment"
+                android:id="@+id/graphFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </fragment>
+
+        </FrameLayout>
 
     </LinearLayout>
 
