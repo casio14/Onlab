@@ -1,7 +1,7 @@
 package patrik.onlab_start;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -35,13 +35,6 @@ public class GraphFragment extends Fragment {
 
         return view;
     }
-
-    /*@Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(
-                getArguments().getInt(MainActivity.ARG_SECTION_NUMBER));
-    }*/
 
     @Override
     public void onResume() {
@@ -79,6 +72,16 @@ public class GraphFragment extends Fragment {
     Random mRand = new Random();
     private double getRandom() {
         return mLastRandom += mRand.nextDouble()*0.5 - 0.25;
+    }
+
+    public void threadPause() throws InterruptedException {
+        if(mTimer1!= null)
+            mTimer1.wait();
+    }
+
+    public void threadResume() throws InterruptedException {
+        if(mTimer1!= null)
+            mTimer1.run();
     }
 
 
