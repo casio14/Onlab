@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import patrik.onlab_start.Model.Packet;
+
 /**
  * Created by Patrik on 2017.03.08..
  */
@@ -22,7 +24,7 @@ public class MessageDetailsFragment extends Fragment {
     }
 
     //Update fields
-    public void changeData(String data) {
-        protocol.setText(data);
+    public void changeData(Packet data) {
+        protocol.setText(data.getType());
     }
 }

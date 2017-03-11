@@ -1,13 +1,15 @@
 package patrik.onlab_start;
 
 import android.app.Activity;
-import android.support.v4.app.ListFragment;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
+import android.support.v4.app.ListFragment;
+import android.view.View;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import patrik.onlab_start.Model.Packet;
 
 /**
  * Created by Patrik on 2017.03.07..
@@ -15,6 +17,7 @@ import java.util.List;
 public class MessageListFragment extends ListFragment {
 
     ListView lv;
+    MessageAdapter adapter;
     PacketCommunicator communicator; /* The interface object to call the MainActivity update() method */
 
     @Override
@@ -36,17 +39,44 @@ public class MessageListFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         //Creat the datas
-        List<String> values = new ArrayList<String>();
-        values.add("MAP");values.add("CAM");values.add("DENM");values.add("CAM");values.add("CAM");values.add("DENM");
-        values.add("MAP");values.add("MAP");values.add("DENM");
+        List<Packet> values = new ArrayList<Packet>();
+        values.add(new Packet("1.2141","DENM","XXXXX.Y","94.2"));
+        values.add(new Packet("1.6321","CAM","XXXXX.Y","94.2"));
+        values.add(new Packet("1.9235","DENM","XXXXX.Y","94.2"));
+        values.add(new Packet("3.5235","DENM","XXXXX.Y","94.2"));
+        values.add(new Packet("3.7326","MAP","XXXXX.Y","94.2"));
+        values.add(new Packet("4.5474","CAM","XXXXX.Y","94.2"));
+        values.add(new Packet("5.8734","DENM","XXXXX.Y","94.2"));
+        values.add(new Packet("3.7326","MAP","XXXXX.Y","94.2"));
+        values.add(new Packet("4.5474","CAM","XXXXX.Y","94.2"));
+        values.add(new Packet("5.8734","DENM","XXXXX.Y","94.2"));
+        values.add(new Packet("3.7326","MAP","XXXXX.Y","94.2"));
+        values.add(new Packet("4.5474","CAM","XXXXX.Y","94.2"));
+        values.add(new Packet("5.8734","DENM","XXXXX.Y","94.2"));
+        values.add(new Packet("3.7326","MAP","XXXXX.Y","94.2"));
+        values.add(new Packet("4.5474","CAM","XXXXX.Y","94.2"));
+        values.add(new Packet("5.8734","DENM","XXXXX.Y","94.2"));
+        values.add(new Packet("3.7326","MAP","XXXXX.Y","94.2"));
+        values.add(new Packet("4.5474","CAM","XXXXX.Y","94.2"));
+        values.add(new Packet("5.8734","DENM","XXXXX.Y","94.2"));
+        values.add(new Packet("3.7326","MAP","XXXXX.Y","94.2"));
+        values.add(new Packet("4.5474","CAM","XXXXX.Y","94.2"));
+        values.add(new Packet("5.8734","DENM","XXXXX.Y","94.2"));
+
+
 
         //Create and set an adapter
-        ArrayAdapter adapter = new MessageAdapter(getActivity(),android.R.layout.simple_list_item_1,MessageListFragment.this,values);
+        adapter = new MessageAdapter(getActivity(),android.R.layout.simple_list_item_1,values);
         setListAdapter(adapter);
     }
 
-    public void sendData(String data) {
+    public void sendData(Packet data) {
         communicator.updateData(data);
     }
 
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        sendData(adapter.getItem(position));
+    }
 }

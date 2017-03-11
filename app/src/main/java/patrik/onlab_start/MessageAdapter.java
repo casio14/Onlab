@@ -6,26 +6,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
+
+import patrik.onlab_start.Model.Packet;
 
 /**
  * Created by Patrik on 2017.03.07..
  */
 public class MessageAdapter extends ArrayAdapter {
 
-    List<String> list;
+    List<Packet> list;
     Context mContext;
     MessageListFragment homeFragment; // Through this we can update the MessageDetailsFragment ( call sendData() )
 
     //Constructor
-    public MessageAdapter(Context context, int resource,MessageListFragment fragment, List<String> input_data) {
+    public MessageAdapter(Context context, int resource, List<Packet> input_data) {
         super(context, resource, input_data);
         mContext=context;
         list=input_data;
-        homeFragment=fragment;
     }
 
     @Override
@@ -35,30 +35,38 @@ public class MessageAdapter extends ArrayAdapter {
         if(v==null){
             LayoutInflater inflater = LayoutInflater.from(mContext);
             v = inflater.inflate(R.layout.row_item,parent,false);
+
+            if(position%2==1)
+                v.setBackgroundColor(Color.parseColor("#dcedc8"));
+
             ViewHolder holder = new ViewHolder();
-            holder.tv = (TextView) v.findViewById(R.id.messageTextView);
-            holder.button = (Button) v.findViewById(R.id.messageButton);
+            holder.tvTime = (TextView) v.findViewById(R.id.tvDetTime);
+            holder.tvType = (TextView) v.findViewById(R.id.tvType);
+            holder.tvActionID = (TextView) v.findViewById(R.id.tvActionID);
+            holder.tvCauseCode = (TextView) v.findViewById(R.id.tvCauseCode);
             v.setTag(holder);
         }
 
-        final String element = list.get(position);
+        final Packet element = list.get(position);
         if (element!=null) {
             ViewHolder holder = (ViewHolder) v.getTag();
-            holder.tv.setText(element);
-            holder.button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Send data to MessageDetailsFragment
-                    homeFragment.sendData(element);
-                }
-            });
+            holder.tvTime.setText(element.getDetectionTime());
+            holder.tvType.setText(element.getType());
+            holder.tvActionID.setText(element.getActionID());
+            holder.tvCauseCode.setText(element.getCauseCode());
         }
 
         return v;
     }
 
+    public Packet getItem(int position) {
+        return list.get(position);
+    }
+
     public static class ViewHolder {
-        TextView tv;
-        Button button;
+        TextView tvTime;
+        TextView tvType;
+        TextView tvActionID;
+        TextView tvCauseCode;
     }
 }
