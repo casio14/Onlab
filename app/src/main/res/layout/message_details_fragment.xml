@@ -1,36 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="10dp"
     android:padding="10dp"
     android:background="@drawable/rounded_fragment_stlye">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="50dp"
-        android:text="Details"/>
-
-
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Protocol:"
-            android:textSize="30dp"/>
+            android:weightSum="2">
 
-        <TextView
-            android:id="@+id/tvProtocol"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Detection Time:"
+                android:textSize="12dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/details_tvDetTime"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textSize="12dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:textSize="30dp"/>
+            android:layout_marginTop="10dp"
+            android:weightSum="2">
 
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Type:"
+                android:textSize="12dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/detials_tvType"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textSize="12dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:weightSum="2">
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Action ID:"
+                android:textSize="12dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/detials_tvActionID"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textSize="12dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:weightSum="2">
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Cause Code:"
+                android:textSize="12dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/detials_tvCauseCode"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textSize="12dp"/>
+
+        </LinearLayout>
     </LinearLayout>
 
 

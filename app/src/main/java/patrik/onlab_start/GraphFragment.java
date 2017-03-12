@@ -1,8 +1,11 @@
 package patrik.onlab_start;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +14,24 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 /**
  * Created by Patrik on 2017.03.08..
+ * Show the datas in real time from Packets
  */
-public class GraphFragment extends Fragment {
+public class GraphFragment extends Fragment implements Serializable {
 
     GraphView graph;
 
@@ -30,8 +45,10 @@ public class GraphFragment extends Fragment {
         View view = inflater.inflate(R.layout.graph_fragment, container, false);
         graph = (GraphView) view.findViewById(R.id.graph);
         mSeries1 = new LineGraphSeries<>(generateData());
+
         graph.getViewport().setScalable(true); // enables horizontal zooming and scrolling
-        graph.addSeries(mSeries1);
+
+        //graph.addSeries(mSeries1);
 
         return view;
     }
@@ -47,7 +64,7 @@ public class GraphFragment extends Fragment {
 
                 x[0]++;
                 //mSeries1.resetData(generateData());
-                mSeries1.appendData(generate(x[0]),true,100,false);
+                //mSeries1.appendData(generate(x[0]),true,100,false);
                 mHandler.postDelayed(this, 600);
             }
         };
@@ -99,6 +116,58 @@ public class GraphFragment extends Fragment {
     public void threadResume() throws InterruptedException {
         if(mTimer1!= null)
             mTimer1.run();
+    }
+
+    public void saveDatas(Context context, String fileName) throws IOException {
+        FileOutputStream fos = null;
+        ObjectOutputStream oos = null;
+        try{
+            fos = context.openFileOutput(fileName,Context.MODE_PRIVATE);
+            oos = new ObjectOutputStream(fos);
+            List<DataPoint> list = new ArrayList<DataPoint>(); //Save as list because that's serializable
+            Iterator<DataPoint> iterator = mSeries1.getValues(mSeries1.getLowestValueX(),mSeries1.getHighestValueX());
+            while(iterator.hasNext()) {
+                list.add(iterator.next());
+            }
+            oos.writeObject(list);
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            oos.close();
+            fos.close();
+        }
+    }
+
+    public void loadDatas(Context context) throws IOException {
+        FileInputStream fis = null;
+        ObjectInputStream ois = null;
+        try {
+            fis = context.openFileInput("proba");
+            ois = new ObjectInputStream(fis);
+            List<DataPoint> list = (List<DataPoint>)ois.readObject();
+            DataPoint[] points = new DataPoint[list.size()];
+            for(int i=list.size()-1;i>=0;i--) {
+                points[i]=list.get(i);
+            }
+            mSeries1 = new LineGraphSeries<>(points);
+            graph.addSeries(mSeries1);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        finally {
+            ois.close();
+            fis.close();
+        }
+
+
     }
 
 

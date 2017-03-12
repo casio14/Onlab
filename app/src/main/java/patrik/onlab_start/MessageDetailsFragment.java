@@ -11,20 +11,30 @@ import patrik.onlab_start.Model.Packet;
 
 /**
  * Created by Patrik on 2017.03.08..
+ * Show the clicked Packet details
  */
 public class MessageDetailsFragment extends Fragment {
 
-    TextView protocol;
+    TextView tvDetTime;
+    TextView tvType;
+    TextView tvActionID;
+    TextView tvCauseCode;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.message_details_fragment, container, false);
-        protocol = (TextView) v.findViewById(R.id.tvProtocol);
+        tvDetTime = (TextView) v.findViewById(R.id.details_tvDetTime);
+        tvType = (TextView) v.findViewById(R.id.detials_tvType);
+        tvActionID = (TextView) v.findViewById(R.id.detials_tvActionID);
+        tvCauseCode = (TextView) v.findViewById(R.id.detials_tvCauseCode);
         return v;
     }
 
     //Update fields
     public void changeData(Packet data) {
-        protocol.setText(data.getType());
+        tvDetTime.setText(data.getDetectionTime());
+        tvType.setText(data.getType());
+        tvActionID.setText(data.getActionID());
+        tvCauseCode.setText(data.getCauseCode());
     }
 }

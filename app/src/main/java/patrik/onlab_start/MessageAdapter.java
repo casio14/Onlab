@@ -14,6 +14,7 @@ import patrik.onlab_start.Model.Packet;
 
 /**
  * Created by Patrik on 2017.03.07..
+ * Adapter class to MessageListFragment
  */
 public class MessageAdapter extends ArrayAdapter {
 

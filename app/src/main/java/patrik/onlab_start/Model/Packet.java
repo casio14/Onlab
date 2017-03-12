@@ -2,6 +2,7 @@ package patrik.onlab_start.Model;
 
 /**
  * Created by Patrik on 2017.03.11..
+ * Represents a Packet
  */
 public class Packet {
 

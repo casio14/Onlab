@@ -13,6 +13,7 @@ import patrik.onlab_start.Model.Packet;
 
 /**
  * Created by Patrik on 2017.03.07..
+ * Show the captured packets
  */
 public class MessageListFragment extends ListFragment {
 
@@ -74,6 +75,7 @@ public class MessageListFragment extends ListFragment {
         communicator.updateData(data);
     }
 
+    //Send the clicked packet data to DetailsFragment
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
