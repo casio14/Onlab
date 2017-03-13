@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="patrik.onlab_start.MainActivity">
+    <item
+        android:id="@+id/load_settings"
+        android:orderInCategory="1"
+        app:showAsAction="always"
+        android:title="Load graph data" />
+</menu>

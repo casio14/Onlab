@@ -48,7 +48,7 @@ public class GraphFragment extends Fragment implements Serializable {
 
         graph.getViewport().setScalable(true); // enables horizontal zooming and scrolling
 
-        //graph.addSeries(mSeries1);
+        graph.addSeries(mSeries1);
 
         return view;
     }
@@ -64,7 +64,7 @@ public class GraphFragment extends Fragment implements Serializable {
 
                 x[0]++;
                 //mSeries1.resetData(generateData());
-                //mSeries1.appendData(generate(x[0]),true,100,false);
+                mSeries1.appendData(generate(x[0]),true,100,false);
                 mHandler.postDelayed(this, 600);
             }
         };
@@ -143,11 +143,11 @@ public class GraphFragment extends Fragment implements Serializable {
         }
     }
 
-    public void loadDatas(Context context) throws IOException {
+    public void loadDatas(Context context,String fileName) throws IOException {
         FileInputStream fis = null;
         ObjectInputStream ois = null;
         try {
-            fis = context.openFileInput("proba");
+            fis = context.openFileInput(fileName);
             ois = new ObjectInputStream(fis);
             List<DataPoint> list = (List<DataPoint>)ois.readObject();
             DataPoint[] points = new DataPoint[list.size()];
