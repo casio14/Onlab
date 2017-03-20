@@ -3,6 +3,7 @@ package patrik.onlab_start;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -122,7 +123,13 @@ public class GraphFragment extends Fragment implements Serializable {
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try{
-            fos = context.openFileOutput(fileName,Context.MODE_PRIVATE);
+            File directory = new File(context.getFilesDir().getPath(),"SavedDatas"); //New folder
+            if(!directory.exists()) {
+                directory.mkdir();
+            }
+
+            File file = new File(directory,fileName); //New file to the specified folder
+            fos = new FileOutputStream(file);
             oos = new ObjectOutputStream(fos);
             List<DataPoint> list = new ArrayList<DataPoint>(); //Save as list because that's serializable
             Iterator<DataPoint> iterator = mSeries1.getValues(mSeries1.getLowestValueX(),mSeries1.getHighestValueX());
@@ -147,14 +154,16 @@ public class GraphFragment extends Fragment implements Serializable {
         FileInputStream fis = null;
         ObjectInputStream ois = null;
         try {
-            fis = context.openFileInput(fileName);
+            File dir = new File(context.getFilesDir().getPath(),"SavedDatas"); //get folder
+            File file = new File(dir,fileName); //New file to the specified folder
+            fis = new FileInputStream(file);
             ois = new ObjectInputStream(fis);
             List<DataPoint> list = (List<DataPoint>)ois.readObject();
             DataPoint[] points = new DataPoint[list.size()];
             for(int i=list.size()-1;i>=0;i--) {
                 points[i]=list.get(i);
             }
-            mSeries1 = new LineGraphSeries<>(points);
+            mSeries1.resetData(points);
             graph.addSeries(mSeries1);
         }
         catch (IOException e) {

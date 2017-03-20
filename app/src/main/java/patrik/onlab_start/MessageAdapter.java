@@ -64,6 +64,11 @@ public class MessageAdapter extends ArrayAdapter {
         return list.get(position);
     }
 
+    public void addPacket(Packet packet) {
+        list.add(packet);
+        notifyDataSetChanged();
+    }
+
     public static class ViewHolder {
         TextView tvTime;
         TextView tvType;

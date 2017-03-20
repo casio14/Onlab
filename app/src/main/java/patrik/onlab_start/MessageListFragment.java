@@ -2,6 +2,7 @@ package patrik.onlab_start;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
@@ -21,6 +22,11 @@ public class MessageListFragment extends ListFragment {
     MessageAdapter adapter;
     PacketCommunicator communicator; /* The interface object to call the MainActivity update() method */
 
+    /////TÖRLENDŐ, CSAK DEMÓZNI VAN
+    private final Handler mHandler = new Handler();
+    private Runnable mTimer1;
+    /////
+
     @Override
     public void onAttach(Activity activity) {
 
@@ -34,6 +40,22 @@ public class MessageListFragment extends ListFragment {
             throw new ClassCastException(activity.toString() + "must implement updateData(String data)");
         }
     }
+
+    ////////////TÖRLENDŐ, CSAK DEMÓZNI VAN
+    @Override
+    public void onResume() {
+        super.onResume();
+        final int[] x = {100};
+        mTimer1 = new Runnable() {
+            @Override
+            public void run() {
+                adapter.addPacket(new Packet(String.valueOf(x[0]++),"CAM","XXXXX.Y","94.2"));
+                mHandler.postDelayed(this, 600);
+            }
+        };
+        mHandler.postDelayed(mTimer1, 300);
+    }
+    /////////////////
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

@@ -1,5 +1,6 @@
 package patrik.onlab_start;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -130,7 +131,8 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         final TextView choosenFile = (TextView) view.findViewById(R.id.load_tvChoosen);
         choosenFile.setText("-");
 
-        final File[] files = getFilesDir().listFiles();
+        File dir = new File(getApplicationContext().getFilesDir().getPath(),"SavedDatas"); //get folder
+        final File[] files = dir.listFiles();
         final String[] names = new String[files.length];
         for(int i=0;i<files.length;i++) {
             names[i]=files[i].getName();
