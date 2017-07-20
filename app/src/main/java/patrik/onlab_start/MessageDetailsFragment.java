@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import patrik.onlab_start.Model.NotificationType;
 import patrik.onlab_start.Model.PacketAncestor;
 
 /**
@@ -47,7 +48,7 @@ public class MessageDetailsFragment extends Fragment {
 
     public void changeData(PacketAncestor data) {
 
-        if(data.getType().toString().equals("Facility")) {
+        if(data.getNotificationType() == NotificationType.FAC_NOTIFICATION) {
             FacilityNotification fc = (FacilityNotification) data.getObject();
             switch (fc.getType().toString()) {
                 case "DENM":
@@ -60,7 +61,7 @@ public class MessageDetailsFragment extends Fragment {
             }
         }
 
-        if(data.getType().toString().equals("Ldm")) {
+        if(data.getNotificationType() == NotificationType.LDM_NOTIFICATION) {
             LdmObject lo = (LdmObject) data.getObject();
             switch (lo.getObjectType().toString()) {
                 case "MAP":

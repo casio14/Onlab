@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import patrik.onlab_start.Model.NotificationType;
 import patrik.onlab_start.Model.PacketAncestor;
 import patrik.onlab_start.Model.PacketCommunicator;
 
@@ -48,7 +49,7 @@ public class MessageListFragment extends ListFragment {
             communicator = (PacketCommunicator) activity;
 
         } catch (ClassCastException e ) { /* If the MainClass not implement the interface */
-            throw new ClassCastException(activity.toString() + "must implement updateData(String data)");
+            throw new ClassCastException(activity.toString() + "must implement updateDataDetails(String data)");
         }
     }
 
@@ -60,7 +61,7 @@ public class MessageListFragment extends ListFragment {
     }
 
     public void sendData(PacketAncestor data) {
-        communicator.updateData(data);
+        communicator.updateDataDetails(data);
     }
 
     //Send the clicked packet infos to the DetailsFragment
@@ -100,19 +101,19 @@ public class MessageListFragment extends ListFragment {
 
         FacilityNotification.Builder n = new FacilityNotification.Builder().withDenmEvent(denm).withType(FacilityNotificationType.DENM);
         FacilityNotification not = n.build();
-        PacketAncestor p1 = new PacketAncestor(not,"Facility");
+        PacketAncestor p1 = new PacketAncestor(not, NotificationType.FAC_NOTIFICATION);
 
         FacilityNotification.Builder n2 = new FacilityNotification.Builder().withType(FacilityNotificationType.CAM);
         FacilityNotification not2 = n2.build();
-        PacketAncestor p2 = new PacketAncestor(not2,"Facility");
+        PacketAncestor p2 = new PacketAncestor(not2,NotificationType.FAC_NOTIFICATION);
 
         LdmObject ldm1 = new LdmObject();
         ldm1.setObjectType(LdmObjectType.MAP);
-        PacketAncestor p4 = new PacketAncestor(ldm1,"Ldm");
+        PacketAncestor p4 = new PacketAncestor(ldm1,NotificationType.LDM_NOTIFICATION);
 
         LdmObject ldm2 = new LdmObject();
         ldm2.setObjectType(LdmObjectType.SPAT);
-        PacketAncestor p5 = new PacketAncestor(ldm2,"Ldm");
+        PacketAncestor p5 = new PacketAncestor(ldm2,NotificationType.LDM_NOTIFICATION);
         //----------------------------------------------------
 
         List<PacketAncestor> values1 = new ArrayList<PacketAncestor>();

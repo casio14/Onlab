@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import patrik.onlab_start.Model.NotificationType;
 import patrik.onlab_start.Model.PacketAncestor;
 
 /**
@@ -106,7 +107,7 @@ public class MessageAdapter extends ArrayAdapter {
         if (element != null) {
             ViewHolder holder = (ViewHolder) v.getTag();
 
-            if (element.getType().equals("Facility")) {
+            if (element.getNotificationType() == NotificationType.FAC_NOTIFICATION) {
                 FacilityNotification fc = (FacilityNotification) element.getObject();
 
                 if (fc.getType().toString().equals("DENM")) {
@@ -133,7 +134,7 @@ public class MessageAdapter extends ArrayAdapter {
             }
 
 
-            if (element.getType().equals("Ldm")) {
+            if (element.getNotificationType() == NotificationType.LDM_NOTIFICATION) {
                 LdmObject lo = (LdmObject) element.getObject();
 
                 if (lo.getObjectType().toString().equals("MAP")) {
@@ -1042,8 +1043,8 @@ public class MessageAdapter extends ArrayAdapter {
 
             for (PacketAncestor p :
                     list) {
-                String type = p.getType().toString();
-                if (type.equals("Facility")) {
+                NotificationType notificationType = p.getNotificationType();
+                if (notificationType == NotificationType.FAC_NOTIFICATION) {
                     FacilityNotification fn = (FacilityNotification) p.getObject();
                     switch (fn.getType().toString()) {
                         case "DENM":
@@ -1059,7 +1060,7 @@ public class MessageAdapter extends ArrayAdapter {
                     }
                 }
 
-                if (type.equals("Ldm")) {
+                if (notificationType == NotificationType.LDM_NOTIFICATION) {
                     LdmObject lo = (LdmObject) p.getObject();
                     switch (lo.getObjectType().toString()) {
                         case "MAP":

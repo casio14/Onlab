@@ -7,6 +7,6 @@ package patrik.onlab_start.Model;
  */
 public interface PacketCommunicator {
 
-    public void updateData(PacketAncestor data);
+    public void updateDataDetails(PacketAncestor data);
 
 }

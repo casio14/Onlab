@@ -33,6 +33,7 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeoutException;
 
 import patrik.onlab_start.Model.DataCommunicator;
+import patrik.onlab_start.Model.NotificationType;
 import patrik.onlab_start.Model.PacketAncestor;
 import patrik.onlab_start.Model.PacketCommunicator;
 
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
     }*/
 
     //Show a message info in the MessageDetailsFragment
-    public void updateData(PacketAncestor data) {
+    public void updateDataDetails(PacketAncestor data) {
 
         //Set the appropriate fragment
         if (messageDetailsFragment == null) {
@@ -228,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
 
     //Send incoming packet infos to the GraphFragment
     @Override
-    public void send(double count,double avarageSNR) {
+    public void sendDatasForShowing(double count, double avarageSNR) {
         if (graphFragment == null) {
             graphFragment = (GraphFragment) getFragmentManager().findFragmentById(R.id.graphFragment);
         }
@@ -488,7 +489,7 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                                 public void run() {
                                     Log.d("ÜZENETEK SZÁMA", ":::::" + messageCounter);
                                     avarageSNR = snrSum / messageCounter;
-                                    send(messageCounter,avarageSNR);
+                                    sendDatasForShowing(messageCounter,avarageSNR);
                                     messageCounter = 0;
                                     snrSum=0;
                                     avarageSNR=0;
@@ -528,7 +529,8 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                                     @Override
                                     public void run() {
                                         synchronized (facilityNotification) {
-                                            PacketAncestor packet = new PacketAncestor(facilityNotification, "Facility");
+                                            PacketAncestor packet =
+                                                    new PacketAncestor(facilityNotification, NotificationType.FAC_NOTIFICATION);
                                             listFragment.adapter.addPacket(packet);
                                             messageCounter++;
                                             snrSum += facilityNotification.getRssi();
@@ -547,7 +549,7 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                                     @Override
                                     public void run() {
                                         synchronized (ldmObject) {
-                                            PacketAncestor packet = new PacketAncestor(ldmObject, "Ldm");
+                                            PacketAncestor packet = new PacketAncestor(ldmObject, NotificationType.LDM_NOTIFICATION);
                                             listFragment.adapter.addPacket(packet);
                                             messageCounter++;
                                             snrSum += ldmObject.getRssiDbm();

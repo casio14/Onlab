@@ -8,16 +8,16 @@ package patrik.onlab_start.Model;
 public class PacketAncestor {
 
     Object object;
-    String type; //Facility, LDM
+    NotificationType notificationType; //Facility, LDM
     int selected = 0;
 
-    public PacketAncestor(Object object, String type) {
+    public PacketAncestor(Object object, NotificationType notificationType) {
         this.object = object;
-        this.type = type;
+        this.notificationType = notificationType;
     }
 
-    public String getType() {
-        return type;
+    public NotificationType getNotificationType() {
+        return notificationType;
     }
 
     public Object getObject() {
