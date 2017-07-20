@@ -1,16 +1,28 @@
 package patrik.onlab_start;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 
+import com.commsignia.v2x.client.model.DENM;
+import com.commsignia.v2x.client.model.DENMActionID;
+import com.commsignia.v2x.client.model.FacilityNotification;
+import com.commsignia.v2x.client.model.FacilityNotificationType;
+import com.commsignia.v2x.client.model.LdmObject;
+import com.commsignia.v2x.client.model.LdmObjectType;
+import com.commsignia.v2x.client.model.PrimaryCause;
+import com.commsignia.v2x.client.model.RoadworksSubCauseCode;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
-import patrik.onlab_start.Model.Packet;
+import patrik.onlab_start.Model.PacketAncestor;
+import patrik.onlab_start.Model.PacketCommunicator;
 
 /**
  * Created by Patrik on 2017.03.07..
@@ -22,10 +34,9 @@ public class MessageListFragment extends ListFragment {
     MessageAdapter adapter;
     PacketCommunicator communicator; /* The interface object to call the MainActivity update() method */
 
-    /////TÖRLENDŐ, CSAK DEMÓZNI VAN
-    private final Handler mHandler = new Handler();
-    private Runnable mTimer1;
-    /////
+    int selectedItemPosition=-1;
+    View selectedItemView=null;
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -41,66 +52,77 @@ public class MessageListFragment extends ListFragment {
         }
     }
 
-    ////////////TÖRLENDŐ, CSAK DEMÓZNI VAN
-    @Override
-    public void onResume() {
-        super.onResume();
-        final int[] x = {100};
-        mTimer1 = new Runnable() {
-            @Override
-            public void run() {
-                adapter.addPacket(new Packet(String.valueOf(x[0]++),"CAM","XXXXX.Y","94.2"));
-                mHandler.postDelayed(this, 600);
-            }
-        };
-        mHandler.postDelayed(mTimer1, 300);
-    }
-    /////////////////
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //Creat the datas
-        List<Packet> values = new ArrayList<Packet>();
-        values.add(new Packet("1.2141","DENM","XXXXX.Y","94.2"));
-        values.add(new Packet("1.6321","CAM","XXXXX.Y","94.2"));
-        values.add(new Packet("1.9235","DENM","XXXXX.Y","94.2"));
-        values.add(new Packet("3.5235","DENM","XXXXX.Y","94.2"));
-        values.add(new Packet("3.7326","MAP","XXXXX.Y","94.2"));
-        values.add(new Packet("4.5474","CAM","XXXXX.Y","94.2"));
-        values.add(new Packet("5.8734","DENM","XXXXX.Y","94.2"));
-        values.add(new Packet("3.7326","MAP","XXXXX.Y","94.2"));
-        values.add(new Packet("4.5474","CAM","XXXXX.Y","94.2"));
-        values.add(new Packet("5.8734","DENM","XXXXX.Y","94.2"));
-        values.add(new Packet("3.7326","MAP","XXXXX.Y","94.2"));
-        values.add(new Packet("4.5474","CAM","XXXXX.Y","94.2"));
-        values.add(new Packet("5.8734","DENM","XXXXX.Y","94.2"));
-        values.add(new Packet("3.7326","MAP","XXXXX.Y","94.2"));
-        values.add(new Packet("4.5474","CAM","XXXXX.Y","94.2"));
-        values.add(new Packet("5.8734","DENM","XXXXX.Y","94.2"));
-        values.add(new Packet("3.7326","MAP","XXXXX.Y","94.2"));
-        values.add(new Packet("4.5474","CAM","XXXXX.Y","94.2"));
-        values.add(new Packet("5.8734","DENM","XXXXX.Y","94.2"));
-        values.add(new Packet("3.7326","MAP","XXXXX.Y","94.2"));
-        values.add(new Packet("4.5474","CAM","XXXXX.Y","94.2"));
-        values.add(new Packet("5.8734","DENM","XXXXX.Y","94.2"));
-
-
-
-        //Create and set an adapter
-        adapter = new MessageAdapter(getActivity(),android.R.layout.simple_list_item_1,values);
-        setListAdapter(adapter);
+        //getListView().setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
     }
 
-    public void sendData(Packet data) {
+    public void sendData(PacketAncestor data) {
         communicator.updateData(data);
     }
 
-    //Send the clicked packet data to DetailsFragment
+    //Send the clicked packet infos to the DetailsFragment
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+        //super.onListItemClick(l, v, position, id);
+
+        if(selectedItemPosition>-1) {
+            if(selectedItemPosition%2==1)
+                selectedItemView.setBackgroundColor(Color.parseColor("#dcedc8"));
+            else
+                selectedItemView.setBackgroundColor(Color.WHITE);
+
+            adapter.list.get(position).setSelected(1);
+        }
+
+        v.setBackgroundColor(Color.LTGRAY);
+        selectedItemPosition=position;
+        selectedItemView = v;
+
+        adapter.list.get(position).setSelected(1);
+
         sendData(adapter.getItem(position));
+    }
+
+    public void startPacketCapturing(String DENMType1Value, String DENMType2Value, String DENMType3Value,
+                                     String CAMType1Value,String CAMType2Value,String CAMType3Value,
+                                     String MAPType1Value,String MAPType2Value,String MAPType3Value,
+                                     String SPATType1Value,String SPATType2Value,String SPATType3Value) {
+
+        //Create and set an adapter
+        //TESTING------------------------------------
+        DENM denm = new DENM();
+        denm.setDetectionTime(new Date());
+        denm.setEventType(PrimaryCause.ROADWORKS.withSubCause(RoadworksSubCauseCode.MAJOR_ROADWORKS));
+        denm.setActionID(new DENMActionID(0l, 0l));
+
+        FacilityNotification.Builder n = new FacilityNotification.Builder().withDenmEvent(denm).withType(FacilityNotificationType.DENM);
+        FacilityNotification not = n.build();
+        PacketAncestor p1 = new PacketAncestor(not,"Facility");
+
+        FacilityNotification.Builder n2 = new FacilityNotification.Builder().withType(FacilityNotificationType.CAM);
+        FacilityNotification not2 = n2.build();
+        PacketAncestor p2 = new PacketAncestor(not2,"Facility");
+
+        LdmObject ldm1 = new LdmObject();
+        ldm1.setObjectType(LdmObjectType.MAP);
+        PacketAncestor p4 = new PacketAncestor(ldm1,"Ldm");
+
+        LdmObject ldm2 = new LdmObject();
+        ldm2.setObjectType(LdmObjectType.SPAT);
+        PacketAncestor p5 = new PacketAncestor(ldm2,"Ldm");
+        //----------------------------------------------------
+
+        List<PacketAncestor> values1 = new ArrayList<PacketAncestor>();
+        values1.add(p1); values1.add(p2); values1.add(p4); values1.add(p5);
+        List<PacketAncestor> values2 = Collections.synchronizedList(values1); // Thread safe List
+
+        adapter = new MessageAdapter(getActivity(),android.R.layout.simple_list_item_1,values2,DENMType1Value,DENMType2Value,
+                DENMType3Value,CAMType1Value,CAMType2Value,CAMType3Value,
+                MAPType1Value,MAPType2Value,MAPType3Value,
+                SPATType1Value,SPATType2Value,SPATType3Value);
+        setListAdapter(adapter);
     }
 }

@@ -1,3 +1,134 @@
 <resources>
     <string name="app_name">Onlab-start</string>
+
+    <string-array name="types">
+        <item>DENM</item>
+        <item>CAM</item>
+        <item>MAP</item>
+        <item>SPAT</item>
+    </string-array>
+
+    <string-array name="denmProperties">
+        <item>ActionID</item>
+        <item>DetectionTime</item>
+        <item>ReferenceTime</item>
+        <item>StationType</item>
+        <item>ValidityDuration</item>
+        <item>Altitude</item>
+        <item>Latitude</item>
+        <item>Longitude</item>
+        <item>DangerousGoods</item>
+        <item>LaneClosed</item>
+        <item>Heading</item>
+        <item>Speed</item>
+        <item>EventType</item>
+        <item>Ext.Temperature</item>
+        <item>InformationQuality</item>
+        <item>LaneNumber</item>
+        <item>RelevanceDistance</item>
+        <item>RelevanceTrafficDirection</item>
+        <item>RoadType</item>
+        <item>SpeedLimit</item>
+        <item>StartingPointSpeedLimit</item>
+        <item>StationaryCause</item>
+        <item>StationarySince</item>
+        <item>TransmissionInterval</item>
+    </string-array>
+
+    <string-array name="camProperties">
+        <item>Heading</item>
+        <item>Speed</item>
+        <item>StationType</item>
+        <item>Altitude</item>
+        <item>Latitude</item>
+        <item>Longitude</item>
+        <item>VehicleRole</item>
+        <item>PerformanceClass</item>
+        <item>LaneNumber</item>
+        <item>DriveDirection</item>
+        <item>LongitudinalAcceleration</item>
+        <item>LateralAcceleration</item>
+        <item>VerticalAcceleration</item>
+        <item>EmbarkationStatus</item>
+        <item>CurvatureValue</item>
+        <item>CurvatureCalculationMode</item>
+        <item>YawRate</item>
+        <item>SteeringWheelAngle</item>
+        <item>VehicleLength</item>
+        <item>VehicleWidth</item>
+        <item>PtActivationType</item>
+        <item>SpecialTransportType</item>
+        <item>DangerousGoodsBasic</item>
+        <item>RoadworksSubCauseCode</item>
+        <item>TrafficRule</item>
+        <item>SpeedLimit</item>
+        <item>SirenActivated</item>
+        <item>IndicationCauseCode</item>
+        <item>EmergencyPriorityRequestForFreeCrossingAtATrafficLight</item>
+        <item>ProtectedZoneLatitude</item>
+        <item>ProtectedZoneLongitude</item>
+    </string-array>
+
+    <string-array name="mapProperties">
+        <item>Longitude</item>
+        <item>Latitude</item>
+        <item>TimeStamp</item>
+        <item>ObjectID</item>
+        <item>Speed</item>
+        <item>Security</item>
+        <item>1.Intersection Longitude</item>
+        <item>1.Intersection Latitude</item>
+        <item>1.Intersection ID</item>
+        <item>1.Intersection laneWidth</item>
+        <item>1.Intersection revision</item>
+        <item>1.Intersection name</item>
+        <item>1.Intersection laneCount</item>
+        <item>2.Intersection Longitude</item>
+        <item>2.Intersection Latitude</item>
+        <item>2.Intersection ID</item>
+        <item>2.Intersection laneWidth</item>
+        <item>2.Intersection revision</item>
+        <item>2.Intersection name</item>
+        <item>2.Intersection laneCount</item>
+        <item>3.Intersection Longitude</item>
+        <item>3.Intersection Latitude</item>
+        <item>3.Intersection ID</item>
+        <item>3.Intersection laneWidth</item>
+        <item>3.Intersection revision</item>
+        <item>3.Intersection name</item>
+        <item>3.Intersection laneCount</item>
+        <item>4.Intersection Longitude</item>
+        <item>4.Intersection Latitude</item>
+        <item>4.Intersection ID</item>
+        <item>4.Intersection laneWidth</item>
+        <item>4.Intersection revision</item>
+        <item>4.Intersection name</item>
+        <item>4.Intersection laneCount</item>
+    </string-array>
+
+    <string-array name="spatProperties">
+        <item>Count of intersectionStates</item>
+        <item>Longitude</item>
+        <item>Latitude</item>
+        <item>TimeStamp</item>
+        <item>ObjectID</item>
+        <item>Speed</item>
+        <item>Security</item>
+        <item>1.IntersectionState TimeStamp</item>
+        <item>1.IntersectionState ID</item>
+        <item>1.IntersectionState LaneCount</item>
+        <item>1.IntersectionState Revision</item>
+        <item>2.IntersectionState TimeStamp</item>
+        <item>2.IntersectionState ID</item>
+        <item>2.IntersectionState LaneCount</item>
+        <item>2.IntersectionState Revision</item>
+        <item>3.IntersectionState TimeStamp</item>
+        <item>3.IntersectionState ID</item>
+        <item>3.IntersectionState LaneCount</item>
+        <item>3.IntersectionState Revision</item>
+        <item>4.IntersectionState TimeStamp</item>
+        <item>4.IntersectionState ID</item>
+        <item>4.IntersectionState LaneCount</item>
+        <item>4.IntersectionState Revision</item>
+    </string-array>
 </resources>

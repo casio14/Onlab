@@ -1,31 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="10">
+    android:layout_width="match_parent"
+    android:layout_height="41dp"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvDetTime"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="3.5"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="21dp"
+        android:weightSum="10">
 
-    <TextView
-        android:id="@+id/tvType"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2.5"/>
+        <TextView
+            android:id="@+id/tvType"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:text="PARAM1"
+            android:textSize="13dp"
+            android:textStyle="bold"
+            android:background="@drawable/rowitem_style"/>
 
-    <TextView
-        android:id="@+id/tvActionID"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2.5"/>
+        <TextView
+            android:id="@+id/tvParamType1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp"
+            android:text="PARAM2"
+            android:textSize="13dp"
+            android:textStyle="bold"
+            android:background="@drawable/rowitem_style"/>
 
-    <TextView
-        android:id="@+id/tvCauseCode"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1.5"/>
+        <TextView
+            android:id="@+id/tvParamType2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp"
+            android:text="PARAM3"
+            android:textSize="13dp"
+            android:textStyle="bold"
+            android:background="@drawable/rowitem_style"/>
+
+        <TextView
+            android:id="@+id/tvParamType3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3.5"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp"
+            android:text="PARAM4"
+            android:textSize="13dp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:weightSum="10">
+
+        <TextView
+            android:id="@+id/tvSpaceHolder"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:background="@drawable/rowitem_style"/>
+
+        <TextView
+            android:id="@+id/tvParam1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp"
+            android:text="PARAM2"
+            android:background="@drawable/rowitem_style"/>
+
+        <TextView
+            android:id="@+id/tvParam2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp"
+            android:text="PARAM3"
+            android:background="@drawable/rowitem_style"/>
+
+        <TextView
+            android:id="@+id/tvParam3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3.5"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp"
+            android:text="PARAM4" />
+
+
+    </LinearLayout>
 
 </LinearLayout>

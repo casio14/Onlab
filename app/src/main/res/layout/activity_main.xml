@@ -2,79 +2,153 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="2"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:weightSum="2"
     tools:context="patrik.onlab_start.MainActivity">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/left_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:orientation="vertical"
         android:weightSum="10">
 
         <FrameLayout
+            android:id="@+id/messageFrame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="3dp"
+            android:layout_height="0dp"
             android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_fragment_stlye">
+            android:layout_weight="7"
+            android:background="@drawable/rounded_fragment_stlye"
+            android:padding="3dp">
 
             <fragment
-                android:name="patrik.onlab_start.MessageListFragment"
                 android:id="@+id/messageFragment"
+                android:name="patrik.onlab_start.MessageListFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </fragment>
+                android:layout_height="match_parent"></fragment>
 
         </FrameLayout>
 
+        <LinearLayout
+            android:id="@+id/spinnerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Message Type:"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/typeSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/rounded_spinner_style"
+                android:textAlignment="center"></Spinner>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Properties:"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/firstPropertySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/rounded_spinner_style"></Spinner>
+
+            <Spinner
+                android:id="@+id/secondPropertySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/rounded_spinner_style"></Spinner>
+
+            <Spinner
+                android:id="@+id/thirdPropertySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/rounded_spinner_style"></Spinner>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="Set the measuring interval:"
+                    android:textSize="20dp"
+                    android:textStyle="bold"/>
+
+                <EditText
+                    android:id="@+id/eTsetInterval"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="9">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/startButton"
-                android:layout_marginLeft="5dp"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:background="@drawable/play"/>
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/play" />
 
             <Button
                 android:id="@+id/stopButton"
-                android:layout_marginLeft="5dp"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:background="@drawable/stop"/>
-
-            <TextView
                 android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="Select:"
-                android:textSize="15dp"/>
+                android:background="@drawable/stop" />
 
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <Button
+                android:id="@+id/restartButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/replay"/>
 
-            </Spinner>
-
-
+            <Button
+                android:id="@+id/mainSaveButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/saveicon" />
 
         </LinearLayout>
 
@@ -82,27 +156,25 @@
     </LinearLayout>
 
 
-
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:orientation="vertical"
         android:weightSum="2">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="1dp"
-            android:padding="3dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:padding="3dp">
 
             <fragment
-                android:name="patrik.onlab_start.MessageDetailsFragment"
                 android:id="@+id/detailsFragment"
+                android:name="patrik.onlab_start.MessageDetailsFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </fragment>
+                android:layout_height="match_parent"></fragment>
 
         </FrameLayout>
 
@@ -110,15 +182,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="1dp"
-            android:padding="3dp"
             android:layout_weight="1">
 
             <fragment
-                android:name="patrik.onlab_start.GraphFragment"
                 android:id="@+id/graphFragment"
+                android:name="patrik.onlab_start.GraphFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </fragment>
+                android:layout_height="match_parent"></fragment>
 
         </FrameLayout>
 
