@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import patrik.onlab_start.Model.NotificationType;
@@ -40,40 +41,15 @@ public class MessageAdapter extends ArrayAdapter {
     Context mContext;
 
     //Adjusted spinner values
-    String DENMType1Value;
-    String DENMType2Value;
-    String DENMType3Value;
-    String CAMType1Value;
-    String CAMType2Value;
-    String CAMType3Value;
-    String MAPType1Value;
-    String MAPType2Value;
-    String MAPType3Value;
-    String SPATType1Value;
-    String SPATType2Value;
-    String SPATType3Value;
+    Map<String ,String> selectedValues;
 
     //Constructor
-    public MessageAdapter(Context context, int resource, List<PacketAncestor> input_data, String DENMType1Value, String DENMType2Value,
-                          String DENMType3Value, String CAMType1Value, String CAMType2Value, String CAMType3Value,
-                          String MAPType1Value, String MAPType2Value, String MAPType3Value,
-                          String SPATType1Value, String SPATType2Value, String SPATType3Value) {
+    public MessageAdapter(Context context, int resource, List<PacketAncestor> input_data, Map<String,String> selectedValues) {
         super(context, resource, input_data);
-        mContext = context;
-        list = input_data;
+        this.mContext = context;
+        this.list = input_data;
 
-        this.DENMType1Value = DENMType1Value;
-        this.DENMType2Value = DENMType2Value;
-        this.DENMType3Value = DENMType3Value;
-        this.CAMType1Value = CAMType1Value;
-        this.CAMType2Value = CAMType2Value;
-        this.CAMType3Value = CAMType3Value;
-        this.MAPType1Value = MAPType1Value;
-        this.MAPType2Value = MAPType2Value;
-        this.MAPType3Value = MAPType3Value;
-        this.SPATType1Value = SPATType1Value;
-        this.SPATType2Value = SPATType2Value;
-        this.SPATType3Value = SPATType3Value;
+        this.selectedValues = selectedValues;
     }
 
     @Override
@@ -107,54 +83,54 @@ public class MessageAdapter extends ArrayAdapter {
         if (element != null) {
             ViewHolder holder = (ViewHolder) v.getTag();
 
-            if (element.getNotificationType() == NotificationType.FAC_NOTIFICATION) {
+            if (element.getNotificationType().equals(NotificationType.FAC_NOTIFICATION)) {
                 FacilityNotification fc = (FacilityNotification) element.getObject();
 
                 if (fc.getType().toString().equals("DENM")) {
                     holder.tvType.setText(fc.getType().toString());
-                    holder.tvParamType1.setText(DENMType1Value);
-                    holder.tvParamType2.setText(DENMType2Value);
-                    holder.tvParamType3.setText(DENMType3Value);
+                    holder.tvParamType1.setText(selectedValues.get("DENM_1"));
+                    holder.tvParamType2.setText(selectedValues.get("DENM_2"));
+                    holder.tvParamType3.setText(selectedValues.get("DENM_3"));
 
-                    fcSetDENMParamValue(DENMType1Value, holder.tvParam1, fc);
-                    fcSetDENMParamValue(DENMType2Value, holder.tvParam2, fc);
-                    fcSetDENMParamValue(DENMType3Value, holder.tvParam3, fc);
+                    fcSetDENMParamValue(selectedValues.get("DENM_1"), holder.tvParam1, fc);
+                    fcSetDENMParamValue(selectedValues.get("DENM_2"), holder.tvParam2, fc);
+                    fcSetDENMParamValue(selectedValues.get("DENM_3"), holder.tvParam3, fc);
                 }
 
                 if (fc.getType().toString().equals("CAM")) {
                     holder.tvType.setText(fc.getType().toString());
-                    holder.tvParamType1.setText(CAMType1Value);
-                    holder.tvParamType2.setText(CAMType2Value);
-                    holder.tvParamType3.setText(CAMType3Value);
+                    holder.tvParamType1.setText(selectedValues.get("CAM_1"));
+                    holder.tvParamType2.setText(selectedValues.get("CAM_2"));
+                    holder.tvParamType3.setText(selectedValues.get("CAM_3"));
 
-                    fcSetCAMParamValue(CAMType1Value, holder.tvParam1, fc);
-                    fcSetCAMParamValue(CAMType2Value, holder.tvParam2, fc);
-                    fcSetCAMParamValue(CAMType3Value, holder.tvParam3, fc);
+                    fcSetCAMParamValue(selectedValues.get("CAM_1"), holder.tvParam1, fc);
+                    fcSetCAMParamValue(selectedValues.get("CAM_2"), holder.tvParam2, fc);
+                    fcSetCAMParamValue(selectedValues.get("CAM_3"), holder.tvParam3, fc);
                 }
             }
 
 
-            if (element.getNotificationType() == NotificationType.LDM_NOTIFICATION) {
+            if (element.getNotificationType().equals(NotificationType.LDM_NOTIFICATION)) {
                 LdmObject lo = (LdmObject) element.getObject();
 
                 if (lo.getObjectType().toString().equals("MAP")) {
                     holder.tvType.setText(lo.getObjectType().toString());
-                    holder.tvParamType1.setText(MAPType1Value);
-                    holder.tvParamType2.setText(MAPType2Value);
-                    holder.tvParamType3.setText(MAPType3Value);
-                    loSetMAPParamValue(MAPType1Value, holder.tvParam1, lo);
-                    loSetMAPParamValue(MAPType2Value, holder.tvParam2, lo);
-                    loSetMAPParamValue(MAPType3Value, holder.tvParam3, lo);
+                    holder.tvParamType1.setText(selectedValues.get("MAP_1"));
+                    holder.tvParamType2.setText(selectedValues.get("MAP_2"));
+                    holder.tvParamType3.setText(selectedValues.get("MAP_3"));
+                    loSetMAPParamValue(selectedValues.get("MAP_1"), holder.tvParam1, lo);
+                    loSetMAPParamValue(selectedValues.get("MAP_2"), holder.tvParam2, lo);
+                    loSetMAPParamValue(selectedValues.get("MAP_3"), holder.tvParam3, lo);
                 }
 
                 if (lo.getObjectType().toString().equals("SPAT")) {
                     holder.tvType.setText(lo.getObjectType().toString());
-                    holder.tvParamType1.setText(SPATType1Value);
-                    holder.tvParamType2.setText(SPATType2Value);
-                    holder.tvParamType3.setText(SPATType3Value);
-                    loSetSPATParamValue(SPATType1Value, holder.tvParam1, lo);
-                    loSetSPATParamValue(SPATType2Value, holder.tvParam2, lo);
-                    loSetSPATParamValue(SPATType3Value, holder.tvParam3, lo);
+                    holder.tvParamType1.setText(selectedValues.get("SPAT_1"));
+                    holder.tvParamType2.setText(selectedValues.get("SPAT_2"));
+                    holder.tvParamType3.setText(selectedValues.get("SPAT_3"));
+                    loSetSPATParamValue(selectedValues.get("SPAT_1"), holder.tvParam1, lo);
+                    loSetSPATParamValue(selectedValues.get("SPAT_2"), holder.tvParam2, lo);
+                    loSetSPATParamValue(selectedValues.get("SPAT_3"), holder.tvParam3, lo);
                 }
             }
 
@@ -887,18 +863,18 @@ public class MessageAdapter extends ArrayAdapter {
                 break;
 
             case "1.IntersectionState ID":
-                if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 1 && lo.getIntersectionStates().get(0).getId() != null)
-                    tv.setText(lo.getIntersectionStates().get(0).getId().toString());
+                if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 1)
+                    tv.setText(String.valueOf(lo.getIntersectionStates().get(0).getId()));
                 else
                     tv.setText("null");
                 break;
 
-            case "1.IntersectionState LaneCount":
+            /*case "1.IntersectionState LaneCount":
                 if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 1 && lo.getIntersectionStates().get(0).getLaneCount() != null)
                     tv.setText(lo.getIntersectionStates().get(0).getLaneCount().toString());
                 else
                     tv.setText("null");
-                break;
+                break;*/
 
             case "1.IntersectionState Revision":
                 if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 1)
@@ -915,19 +891,19 @@ public class MessageAdapter extends ArrayAdapter {
                 break;
 
             case "2.IntersectionState ID":
-                if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 2 && lo.getIntersectionStates().get(1).getId() != null)
-                    tv.setText(lo.getIntersectionStates().get(1).getId().toString());
+                if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 2)
+                    tv.setText(String.valueOf(lo.getIntersectionStates().get(1).getId()));
                 else
                     tv.setText("null");
                 break;
-
+/*
             case "2.IntersectionState LaneCount":
                 if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 2 && lo.getIntersectionStates().get(1).getLaneCount() != null)
                     tv.setText(lo.getIntersectionStates().get(1).getLaneCount().toString());
                 else
                     tv.setText("null");
                 break;
-
+*/
             case "2.IntersectionState Revision":
                 if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 2)
                     tv.setText(String.valueOf(lo.getIntersectionStates().get(1).getRevision()));
@@ -943,18 +919,18 @@ public class MessageAdapter extends ArrayAdapter {
                 break;
 
             case "3.IntersectionState ID":
-                if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 3 && lo.getIntersectionStates().get(2).getId() != null)
-                    tv.setText(lo.getIntersectionStates().get(2).getId().toString());
+                if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 3)
+                    tv.setText(String.valueOf(lo.getIntersectionStates().get(2).getId()));
                 else
                     tv.setText("null");
                 break;
-
+/*
             case "3.IntersectionState LaneCount":
                 if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 3 && lo.getIntersectionStates().get(2).getLaneCount() != null)
                     tv.setText(lo.getIntersectionStates().get(2).getLaneCount().toString());
                 else
                     tv.setText("null");
-                break;
+                break;*/
 
             case "3.IntersectionState Revision":
                 if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 3)
@@ -971,18 +947,18 @@ public class MessageAdapter extends ArrayAdapter {
                 break;
 
             case "4.IntersectionState ID":
-                if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 4 && lo.getIntersectionStates().get(3).getId() != null)
-                    tv.setText(lo.getIntersectionStates().get(3).getId().toString());
+                if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 4)
+                    tv.setText(String.valueOf(lo.getIntersectionStates().get(3).getId()));
                 else
                     tv.setText("null");
                 break;
-
+/*
             case "4.IntersectionState LaneCount":
                 if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 4 && lo.getIntersectionStates().get(3).getLaneCount() != null)
                     tv.setText(lo.getIntersectionStates().get(3).getLaneCount().toString());
                 else
                     tv.setText("null");
-                break;
+                break;*/
 
             case "4.IntersectionState Revision":
                 if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 4)
@@ -1044,7 +1020,7 @@ public class MessageAdapter extends ArrayAdapter {
             for (PacketAncestor p :
                     list) {
                 NotificationType notificationType = p.getNotificationType();
-                if (notificationType == NotificationType.FAC_NOTIFICATION) {
+                if (notificationType.equals(NotificationType.FAC_NOTIFICATION)) {
                     FacilityNotification fn = (FacilityNotification) p.getObject();
                     switch (fn.getType().toString()) {
                         case "DENM":
@@ -1060,7 +1036,7 @@ public class MessageAdapter extends ArrayAdapter {
                     }
                 }
 
-                if (notificationType == NotificationType.LDM_NOTIFICATION) {
+                if (notificationType.equals(NotificationType.LDM_NOTIFICATION)) {
                     LdmObject lo = (LdmObject) p.getObject();
                     switch (lo.getObjectType().toString()) {
                         case "MAP":
@@ -1602,16 +1578,16 @@ public class MessageAdapter extends ArrayAdapter {
         else
             line += "null,";
 
-        if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 1 && lo.getIntersectionStates().get(0).getId() != null)
-            line += lo.getIntersectionStates().get(0).getId().toString() + ",";
+        if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 1)
+            line += lo.getIntersectionStates().get(0).getId() + ",";
         else
             line += "null,";
-
+/*
         if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 1 && lo.getIntersectionStates().get(0).getLaneCount() != null)
             line += lo.getIntersectionStates().get(0).getLaneCount().toString() + ",";
         else
             line += "null,";
-
+*/
         if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 1)
             line += String.valueOf(lo.getIntersectionStates().get(0).getRevision()) + ",";
         else
@@ -1622,16 +1598,16 @@ public class MessageAdapter extends ArrayAdapter {
         else
             line += "null,";
 
-        if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 2 && lo.getIntersectionStates().get(1).getId() != null)
-            line += lo.getIntersectionStates().get(1).getId().toString() + ",";
+        if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 2)
+            line += lo.getIntersectionStates().get(1).getId() + ",";
         else
             line += "null,";
-
+/*
         if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 2 && lo.getIntersectionStates().get(1).getLaneCount() != null)
             line += lo.getIntersectionStates().get(1).getLaneCount().toString() + ",";
         else
             line += "null,";
-
+*/
         if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 2)
             line += String.valueOf(lo.getIntersectionStates().get(1).getRevision()) + ",";
         else
@@ -1642,16 +1618,16 @@ public class MessageAdapter extends ArrayAdapter {
         else
             line += "null,";
 
-        if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 3 && lo.getIntersectionStates().get(2).getId() != null)
-            line += lo.getIntersectionStates().get(2).getId().toString() + ",";
+        if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 3)
+            line += lo.getIntersectionStates().get(2).getId() + ",";
         else
             line += "null,";
-
+/*
         if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 3 && lo.getIntersectionStates().get(2).getLaneCount() != null)
             line += lo.getIntersectionStates().get(2).getLaneCount().toString() + ",";
         else
             line += "null,";
-
+*/
         if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 3)
             line += String.valueOf(lo.getIntersectionStates().get(2).getRevision()) + ",";
         else
@@ -1662,16 +1638,16 @@ public class MessageAdapter extends ArrayAdapter {
         else
             line += "null,";
 
-        if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 4 && lo.getIntersectionStates().get(3).getId() != null)
-            line += lo.getIntersectionStates().get(3).getId().toString() + ",";
+        if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 4)
+            line += lo.getIntersectionStates().get(3).getId() + ",";
         else
             line += "null,";
-
+/*
         if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 4 && lo.getIntersectionStates().get(3).getLaneCount() != null)
             line += lo.getIntersectionStates().get(3).getLaneCount().toString() + ",";
         else
             line += "null,";
-
+*/
         if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 4)
             line += String.valueOf(lo.getIntersectionStates().get(3).getRevision());
         else

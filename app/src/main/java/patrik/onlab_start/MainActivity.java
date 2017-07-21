@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.commsignia.v2x.client.ITSApplication;
 import com.commsignia.v2x.client.ITSEventAdapter;
+
 import com.commsignia.v2x.client.MessageSet;
 import com.commsignia.v2x.client.exception.ClientException;
 import com.commsignia.v2x.client.model.FacilityNotification;
@@ -26,8 +27,11 @@ import com.commsignia.v2x.client.model.FacilitySubscriptionMessages;
 import com.commsignia.v2x.client.model.LdmFilter;
 import com.commsignia.v2x.client.model.LdmObject;
 import com.commsignia.v2x.client.model.LdmObjectType;
+import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeoutException;
@@ -69,21 +73,8 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
     Timer timer;
 
     //Selected Properties
-    int firstForDENM;
-    int secondForDENM;
-    int thirdForDENM;
-
-    int firstForCAM;
-    int secondForCAM;
-    int thirdForCAM;
-
-    int firstForMAP;
-    int secondForMAP;
-    int thirdForMAP;
-
-    int firstForSPAT;
-    int secondForSPAT;
-    int thirdForSPAT;
+    Map<String,Integer> selectedPropertiesPositions;
+    Map<String,String> selectedPropertiesValues;
 
     String selected = "DENM";
 
@@ -96,9 +87,9 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
     //ITS application properties
     public static ITSApplication itsApplication = null;
     public static final int DEFAULT_ITS_AID = 55;
-    public static final String DEFAULT_TARGET_HOST = "192.168.2.90";
+    public static final String DEFAULT_TARGET_HOST = "192.168.0.96";
     public static final int DEFAULT_TARGET_PORT = 7942;
-    public static final MessageSet DEFAULT_MESSAGE_SET = MessageSet.C;
+    public static final MessageSet DEFAULT_MESSAGE_SET = MessageSet.D;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -107,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
 
         //Initialize the components
         componentInitialization();
+
+        initializeSelectedPropertiesHashMap();
 
         //Set the adapter settings for the spinners
         setAdaptersForSpinners();
@@ -120,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
 
         //Set approtiate listeners for the buttons
         initializeButtonListeners();
+
+        AndroidThreeTen.init(this);
 
 
 
@@ -250,10 +245,11 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                     secondPropertySpinner.setAdapter(adapterDENM_Properties);
                     thirdPropertySpinner.setAdapter(adapterDENM_Properties);
 
-                    firstPropertySpinner.setSelection(firstForDENM);
-                    secondPropertySpinner.setSelection(secondForDENM);
-                    thirdPropertySpinner.setSelection(thirdForDENM);
-                    Log.d("ÉRTÉKEK: ", firstForDENM + " " + secondForDENM + " " + thirdForDENM);
+                    firstPropertySpinner.setSelection(selectedPropertiesPositions.get("DENM_1"));
+                    secondPropertySpinner.setSelection(selectedPropertiesPositions.get("DENM_2"));
+                    thirdPropertySpinner.setSelection(selectedPropertiesPositions.get("DENM_3"));
+                    Log.d("ÉRTÉKEK: ", selectedPropertiesPositions.get("DENM_1") + " " + selectedPropertiesPositions.get("DENM_2")
+                            + " " + selectedPropertiesPositions.get("DENM_3"));
                 }
 
                 if (typeSpinner.getSelectedItem().toString().equals("CAM")) {
@@ -264,10 +260,11 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                     secondPropertySpinner.setAdapter(adapterCAM_Properties);
                     thirdPropertySpinner.setAdapter(adapterCAM_Properties);
 
-                    firstPropertySpinner.setSelection(firstForCAM);
-                    secondPropertySpinner.setSelection(secondForCAM);
-                    thirdPropertySpinner.setSelection(thirdForCAM);
-                    Log.d("ÉRTÉKEK: ", firstForCAM + " " + secondForCAM + " " + thirdForCAM);
+                    firstPropertySpinner.setSelection(selectedPropertiesPositions.get("CAM_1"));
+                    secondPropertySpinner.setSelection(selectedPropertiesPositions.get("CAM_2"));
+                    thirdPropertySpinner.setSelection(selectedPropertiesPositions.get("CAM_3"));
+                    Log.d("ÉRTÉKEK: ", selectedPropertiesPositions.get("CAM_1") + " " + selectedPropertiesPositions.get("CAM_2")
+                            + " " + selectedPropertiesPositions.get("CAM_3"));
                 }
 
                 if (typeSpinner.getSelectedItem().toString().equals("MAP")) {
@@ -278,11 +275,12 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                     secondPropertySpinner.setAdapter(adapterMAP_Properties);
                     thirdPropertySpinner.setAdapter(adapterMAP_Properties);
 
-                    firstPropertySpinner.setSelection(firstForMAP);
-                    secondPropertySpinner.setSelection(secondForMAP);
-                    thirdPropertySpinner.setSelection(thirdForMAP);
+                    firstPropertySpinner.setSelection(selectedPropertiesPositions.get("MAP_1"));
+                    secondPropertySpinner.setSelection(selectedPropertiesPositions.get("MAP_2"));
+                    thirdPropertySpinner.setSelection(selectedPropertiesPositions.get("MAP_3"));
 
-                    Log.d("ÉRTÉKEK: ", firstForMAP + " " + secondForMAP + " " + thirdForMAP);
+                    Log.d("ÉRTÉKEK: ", selectedPropertiesPositions.get("MAP_1") + " " + selectedPropertiesPositions.get("MAP_2")
+                            + " " + selectedPropertiesPositions.get("MAP_3"));
                 }
 
                 if (typeSpinner.getSelectedItem().toString().equals("SPAT")) {
@@ -293,11 +291,12 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                     secondPropertySpinner.setAdapter(adapterSPAT_Properties);
                     thirdPropertySpinner.setAdapter(adapterSPAT_Properties);
 
-                    firstPropertySpinner.setSelection(firstForSPAT);
-                    secondPropertySpinner.setSelection(secondForSPAT);
-                    thirdPropertySpinner.setSelection(thirdForSPAT);
+                    firstPropertySpinner.setSelection(selectedPropertiesPositions.get("SPAT_1"));
+                    secondPropertySpinner.setSelection(selectedPropertiesPositions.get("SPAT_2"));
+                    thirdPropertySpinner.setSelection(selectedPropertiesPositions.get("SPAT_3"));
 
-                    Log.d("ÉRTÉKEK: ", firstForSPAT + " " + secondForSPAT + " " + thirdForSPAT);
+                    Log.d("ÉRTÉKEK: ", selectedPropertiesPositions.get("SPAT_1") + " " + selectedPropertiesPositions.get("SPAT_2")
+                            + " " + selectedPropertiesPositions.get("SPAT_3"));
                 }
             }
 
@@ -311,17 +310,17 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (typeSpinner.getSelectedItem().toString().equals("DENM")) {
-                    firstForDENM = firstPropertySpinner.getSelectedItemPosition();
+                    selectedPropertiesPositions.replace("DENM_1",firstPropertySpinner.getSelectedItemPosition());
                 }
 
                 if (typeSpinner.getSelectedItem().toString().equals("CAM")) {
-                    firstForCAM = firstPropertySpinner.getSelectedItemPosition();
+                    selectedPropertiesPositions.replace("CAM_1",firstPropertySpinner.getSelectedItemPosition());
                 }
                 if (typeSpinner.getSelectedItem().toString().equals("MAP")) {
-                    firstForMAP = firstPropertySpinner.getSelectedItemPosition();
+                    selectedPropertiesPositions.replace("MAP_1",firstPropertySpinner.getSelectedItemPosition());
                 }
                 if (typeSpinner.getSelectedItem().toString().equals("SPAT")) {
-                    firstForSPAT = firstPropertySpinner.getSelectedItemPosition();
+                    selectedPropertiesPositions.replace("SPAT_1",firstPropertySpinner.getSelectedItemPosition());
                 }
 
             }
@@ -336,19 +335,19 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (typeSpinner.getSelectedItem().toString().equals("DENM")) {
-                    secondForDENM = secondPropertySpinner.getSelectedItemPosition();
+                    selectedPropertiesPositions.replace("DENM_2",secondPropertySpinner.getSelectedItemPosition());
                 }
 
                 if (typeSpinner.getSelectedItem().toString().equals("CAM")) {
-                    secondForCAM = secondPropertySpinner.getSelectedItemPosition();
+                    selectedPropertiesPositions.replace("CAM_2",secondPropertySpinner.getSelectedItemPosition());
                 }
 
                 if (typeSpinner.getSelectedItem().toString().equals("MAP")) {
-                    secondForMAP = secondPropertySpinner.getSelectedItemPosition();
+                    selectedPropertiesPositions.replace("MAP_2",secondPropertySpinner.getSelectedItemPosition());
                 }
 
                 if (typeSpinner.getSelectedItem().toString().equals("SPAT")) {
-                    secondForSPAT = secondPropertySpinner.getSelectedItemPosition();
+                    selectedPropertiesPositions.replace("SPAT_2",secondPropertySpinner.getSelectedItemPosition());
                 }
             }
 
@@ -362,19 +361,19 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(typeSpinner.getSelectedItem().toString().equals("DENM")) {
-                    thirdForDENM=thirdPropertySpinner.getSelectedItemPosition();
+                    selectedPropertiesPositions.replace("DENM_3",thirdPropertySpinner.getSelectedItemPosition());
                 }
 
                 if(typeSpinner.getSelectedItem().toString().equals("CAM")) {
-                    thirdForCAM=thirdPropertySpinner.getSelectedItemPosition();
+                    selectedPropertiesPositions.replace("CAM_3",thirdPropertySpinner.getSelectedItemPosition());
                 }
 
                 if(typeSpinner.getSelectedItem().toString().equals("MAP")) {
-                    thirdForMAP=thirdPropertySpinner.getSelectedItemPosition();
+                    selectedPropertiesPositions.replace("MAP_3",thirdPropertySpinner.getSelectedItemPosition());
                 }
 
                 if(typeSpinner.getSelectedItem().toString().equals("SPAT")) {
-                    thirdForSPAT=thirdPropertySpinner.getSelectedItemPosition();
+                    selectedPropertiesPositions.replace("SPAT_3",thirdPropertySpinner.getSelectedItemPosition());
                 }
             }
 
@@ -448,70 +447,15 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                     return;
                 }
 
-                //Set invisible the spinnerLayout
-                final LinearLayout spinnerLayout = (LinearLayout) findViewById(R.id.spinnerLayout);
-                LinearLayout.LayoutParams paramsSpinnerLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 0, 0);
-                spinnerLayout.setLayoutParams(paramsSpinnerLayout);
-                spinnerLayout.setVisibility(View.INVISIBLE);
-
-                //Set larger the messageFragment to fill the spinnerLayout field
-                FrameLayout messageFrame = (FrameLayout) findViewById(R.id.messageFrame);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 0, 9);
-                messageFrame.setLayoutParams(params);
-
-                String[] denmProperties = getResources().getStringArray(R.array.denmProperties);
-                String[] camProperties = getResources().getStringArray(R.array.camProperties);
-                String[] mapProperties = getResources().getStringArray(R.array.mapProperties);
-                String[] spatProperties = getResources().getStringArray(R.array.spatProperties);
-
-                //Pass the adjested spinner values
-                listFragment.startPacketCapturing(denmProperties[firstForDENM], denmProperties[secondForDENM], denmProperties[thirdForDENM],
-                        camProperties[firstForCAM], camProperties[secondForCAM], camProperties[thirdForCAM],
-                        mapProperties[firstForMAP], mapProperties[secondForMAP], mapProperties[thirdForMAP],
-                        spatProperties[firstForSPAT], spatProperties[secondForSPAT], spatProperties[thirdForSPAT]);
-
-
-                if (graphFragment == null) {
-                    graphFragment = (GraphFragment) getFragmentManager().findFragmentById(R.id.graphFragment);
-                }
-
-                graphFragment.onResume();
-
-
-                //Timer for measure the incoming packets
-                if (!measuringInterval_eT.getText().toString().equals("")) {
-                    int interval = Integer.parseInt(measuringInterval_eT.getText().toString());
-                    timer = new Timer();
-                    timer.scheduleAtFixedRate(new TimerTask() {
-                        public void run() {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Log.d("ÜZENETEK SZÁMA", ":::::" + messageCounter);
-                                    avarageSNR = snrSum / messageCounter;
-                                    sendDatasForShowing(messageCounter,avarageSNR);
-                                    messageCounter = 0;
-                                    snrSum=0;
-                                    avarageSNR=0;
-                                }
-                            });
-                        }
-                    }, 0, interval * 1000);
-
-                } else {
-                    Toast.makeText(MainActivity.this, "Give an interval number!", Toast.LENGTH_SHORT).show();
-                }
-
-
                 //Start the ITS Application
                 try {
                     itsApplication = new ITSApplication(DEFAULT_ITS_AID, DEFAULT_TARGET_HOST, DEFAULT_TARGET_PORT, DEFAULT_MESSAGE_SET);
 
                     itsApplication.connect(10000);
 
-                    itsApplication.registerBlocking();
+                    itsApplication.commands().registerBlocking();
 
-                    itsApplication.setDeviceTimeBlocking(System.currentTimeMillis() / 1000L);
+                    itsApplication.commands().setDeviceTimeBlocking(System.currentTimeMillis() / 1000L);
 
                     String id = itsApplication.getHost(); // Get host
                     Log.d("ITS station ID:", String.valueOf(id));
@@ -561,8 +505,8 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                         });
 
 
-                        finalItsApplication.facilitySubscribe(new FacilitySubscriptionMessages().setCamIncluded(true).setDenmIncluded(true));
-                        finalItsApplication.ldmSubscribeBlocking(
+                        finalItsApplication.commands().facilitySubscribeBlocking(new FacilitySubscriptionMessages().setCamIncluded(true).setDenmIncluded(true));
+                        finalItsApplication.commands().ldmSubscribeBlocking(
                                 new LdmFilter().setObjectTypeFilter(LdmObjectType.MAP, LdmObjectType.SPAT)
                         );
 
@@ -571,12 +515,63 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                     }
 
 
-                } catch (InterruptedException | ClientException | TimeoutException e) {
+                } catch (InterruptedException | ClientException |TimeoutException e) {
                     e.printStackTrace();
+                    return;
                 } finally {
                     if (itsApplication != null)
                         Log.d("Request", "was sent.");
                 }
+
+                //Set invisible the spinnerLayout
+                final LinearLayout spinnerLayout = (LinearLayout) findViewById(R.id.spinnerLayout);
+                LinearLayout.LayoutParams paramsSpinnerLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 0, 0);
+                spinnerLayout.setLayoutParams(paramsSpinnerLayout);
+                spinnerLayout.setVisibility(View.INVISIBLE);
+
+                //Set larger the messageFragment to fill the spinnerLayout field
+                FrameLayout messageFrame = (FrameLayout) findViewById(R.id.messageFrame);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 0, 9);
+                messageFrame.setLayoutParams(params);
+
+                updateSelectedPropertiesValuesHashMap();
+                //Pass the adjested spinner values
+                listFragment.startPacketCapturing(selectedPropertiesValues);
+
+
+                if (graphFragment == null) {
+                    graphFragment = (GraphFragment) getFragmentManager().findFragmentById(R.id.graphFragment);
+                }
+
+                graphFragment.onResume();
+
+
+                //Timer for measure the incoming packets
+                if (!measuringInterval_eT.getText().toString().equals("")) {
+                    int interval = Integer.parseInt(measuringInterval_eT.getText().toString());
+                    timer = new Timer();
+                    timer.scheduleAtFixedRate(new TimerTask() {
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.d("ÜZENETEK SZÁMA", ":::::" + messageCounter);
+                                    avarageSNR = snrSum / messageCounter;
+                                    sendDatasForShowing(messageCounter,avarageSNR);
+                                    messageCounter = 0;
+                                    snrSum=0;
+                                    avarageSNR=0;
+                                }
+                            });
+                        }
+                    }, 0, interval * 1000);
+
+                } else {
+                    Toast.makeText(MainActivity.this, "Give an interval number!", Toast.LENGTH_SHORT).show();
+                }
+
+
+
 
                 startButton.setVisibility(View.INVISIBLE);
                 saveButton.setVisibility(View.INVISIBLE);
@@ -654,6 +649,54 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                 startButton.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    public void initializeSelectedPropertiesHashMap() {
+        selectedPropertiesPositions = new HashMap<>();
+        selectedPropertiesPositions.put("DENM_1",0);
+        selectedPropertiesPositions.put("DENM_2",0);
+        selectedPropertiesPositions.put("DENM_3",0);
+        selectedPropertiesPositions.put("CAM_1",0);
+        selectedPropertiesPositions.put("CAM_2",0);
+        selectedPropertiesPositions.put("CAM_3",0);
+        selectedPropertiesPositions.put("MAP_1",0);
+        selectedPropertiesPositions.put("MAP_2",0);
+        selectedPropertiesPositions.put("MAP_3",0);
+        selectedPropertiesPositions.put("SPAT_1",0);
+        selectedPropertiesPositions.put("SPAT_2",0);
+        selectedPropertiesPositions.put("SPAT_3",0);
+
+        selectedPropertiesValues = new HashMap<>();
+        selectedPropertiesValues.put("DENM_1","");
+        selectedPropertiesValues.put("DENM_2","");
+        selectedPropertiesValues.put("DENM_3","");
+        selectedPropertiesValues.put("CAM_1","");
+        selectedPropertiesValues.put("CAM_2","");
+        selectedPropertiesValues.put("CAM_3","");
+        selectedPropertiesValues.put("MAP_1","");
+        selectedPropertiesValues.put("MAP_2","");
+        selectedPropertiesValues.put("MAP_3","");
+        selectedPropertiesValues.put("SPAT_1","");
+        selectedPropertiesValues.put("SPAT_2","");
+        selectedPropertiesValues.put("SPAT_3","");
+    }
+
+    public void updateSelectedPropertiesValuesHashMap() {
+        selectedPropertiesValues.replace("DENM_1",adapterDENM_Properties.getItem(selectedPropertiesPositions.get("DENM_1")).toString());
+        selectedPropertiesValues.replace("DENM_2",adapterDENM_Properties.getItem(selectedPropertiesPositions.get("DENM_2")).toString());
+        selectedPropertiesValues.replace("DENM_3",adapterDENM_Properties.getItem(selectedPropertiesPositions.get("DENM_3")).toString());
+
+        selectedPropertiesValues.replace("CAM_1",adapterCAM_Properties.getItem(selectedPropertiesPositions.get("CAM_1")).toString());
+        selectedPropertiesValues.replace("CAM_2",adapterCAM_Properties.getItem(selectedPropertiesPositions.get("CAM_2")).toString());
+        selectedPropertiesValues.replace("CAM_3",adapterCAM_Properties.getItem(selectedPropertiesPositions.get("CAM_3")).toString());
+
+        selectedPropertiesValues.replace("MAP_1",adapterMAP_Properties.getItem(selectedPropertiesPositions.get("MAP_1")).toString());
+        selectedPropertiesValues.replace("MAP_2",adapterMAP_Properties.getItem(selectedPropertiesPositions.get("MAP_2")).toString());
+        selectedPropertiesValues.replace("MAP_3",adapterMAP_Properties.getItem(selectedPropertiesPositions.get("MAP_3")).toString());
+
+        selectedPropertiesValues.replace("SPAT_1",adapterSPAT_Properties.getItem(selectedPropertiesPositions.get("SPAT_1")).toString());
+        selectedPropertiesValues.replace("SPAT_2",adapterSPAT_Properties.getItem(selectedPropertiesPositions.get("SPAT_2")).toString());
+        selectedPropertiesValues.replace("SPAT_3",adapterSPAT_Properties.getItem(selectedPropertiesPositions.get("SPAT_3")).toString());
     }
 
 }

@@ -1,8 +1,25 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.deploygate:gradle:0.6.2'
+        classpath 'me.tatarka:gradle-retrolambda:3.6.0'
+        classpath 'org.hidetake:gradle-ssh-plugin:2.9.0'
+    }
+}
+
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'deploygate'
+apply plugin: 'org.hidetake.ssh'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion '25.0.2'
 
     defaultConfig {
         applicationId "patrik.onlab_start"
@@ -10,28 +27,42 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
+        multiDexEnabled  true
+
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug{
             debuggable true
         }
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+        dexOptions {
+            javaMaxHeapSize "4g"
+        }
     }
 }
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+    compile 'com.commsignia:v2x-client:1.16.0-SNAPSHOT'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.jjoe64:graphview:4.2.1'
     compile files('libs/log4j-1.2.17.jar')
-    compile files('libs/v2x-client-1.13.0-SNAPSHOT.jar')
     compile files('libs/slf4j-simple-1.7.7.jar')
     compile files('libs/slf4j-api-1.7.7.jar')
-    compile files('libs/rxjava-1.0.8.jar')
     compile files('libs/jsr305-3.0.0.jar')
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile 'com.jakewharton.threetenabp:threetenabp:1.0.5'
+
+    sourceCompatibility = '1.7'
+    targetCompatibility = '1.7'
+
 }

@@ -19,7 +19,9 @@ import com.commsignia.v2x.client.model.RoadworksSubCauseCode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import patrik.onlab_start.Model.NotificationType;
 import patrik.onlab_start.Model.PacketAncestor;
@@ -31,7 +33,6 @@ import patrik.onlab_start.Model.PacketCommunicator;
  */
 public class MessageListFragment extends ListFragment {
 
-    ListView lv;
     MessageAdapter adapter;
     PacketCommunicator communicator; /* The interface object to call the MainActivity update() method */
 
@@ -87,17 +88,14 @@ public class MessageListFragment extends ListFragment {
         sendData(adapter.getItem(position));
     }
 
-    public void startPacketCapturing(String DENMType1Value, String DENMType2Value, String DENMType3Value,
-                                     String CAMType1Value,String CAMType2Value,String CAMType3Value,
-                                     String MAPType1Value,String MAPType2Value,String MAPType3Value,
-                                     String SPATType1Value,String SPATType2Value,String SPATType3Value) {
+    public void startPacketCapturing(Map<String,String> selectedValues) {
 
         //Create and set an adapter
         //TESTING------------------------------------
         DENM denm = new DENM();
         denm.setDetectionTime(new Date());
         denm.setEventType(PrimaryCause.ROADWORKS.withSubCause(RoadworksSubCauseCode.MAJOR_ROADWORKS));
-        denm.setActionID(new DENMActionID(0l, 0l));
+        denm.setActionID(new DENMActionID(0l, 0));
 
         FacilityNotification.Builder n = new FacilityNotification.Builder().withDenmEvent(denm).withType(FacilityNotificationType.DENM);
         FacilityNotification not = n.build();
@@ -120,10 +118,7 @@ public class MessageListFragment extends ListFragment {
         values1.add(p1); values1.add(p2); values1.add(p4); values1.add(p5);
         List<PacketAncestor> values2 = Collections.synchronizedList(values1); // Thread safe List
 
-        adapter = new MessageAdapter(getActivity(),android.R.layout.simple_list_item_1,values2,DENMType1Value,DENMType2Value,
-                DENMType3Value,CAMType1Value,CAMType2Value,CAMType3Value,
-                MAPType1Value,MAPType2Value,MAPType3Value,
-                SPATType1Value,SPATType2Value,SPATType3Value);
+        adapter = new MessageAdapter(getActivity(),android.R.layout.simple_list_item_1,values2,selectedValues);
         setListAdapter(adapter);
     }
 }

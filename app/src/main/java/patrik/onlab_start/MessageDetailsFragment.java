@@ -14,8 +14,16 @@ import com.commsignia.v2x.utils.units.DegreeUnit;
 import com.commsignia.v2x.utils.units.LengthUnit;
 import com.commsignia.v2x.utils.units.SpeedUnit;
 import com.commsignia.v2x.utils.units.TemperatureUnit;
+import com.jakewharton.threetenabp.AndroidThreeTen;
+
+import org.threeten.bp.Instant;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZonedDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -37,6 +45,10 @@ public class MessageDetailsFragment extends Fragment {
     String[] mapProperties;
     String[] spatProperties;
 
+    private static final long LEAP_SECONDS_UNTIL_2004 = 32;
+
+    private static final long UTC_MILLISECONDS_UNTIL_2004 = 1072915200000L;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.message_details_fragment, container, false);
@@ -48,7 +60,7 @@ public class MessageDetailsFragment extends Fragment {
 
     public void changeData(PacketAncestor data) {
 
-        if(data.getNotificationType() == NotificationType.FAC_NOTIFICATION) {
+        if(data.getNotificationType().equals(NotificationType.FAC_NOTIFICATION)) {
             FacilityNotification fc = (FacilityNotification) data.getObject();
             switch (fc.getType().toString()) {
                 case "DENM":
@@ -61,7 +73,7 @@ public class MessageDetailsFragment extends Fragment {
             }
         }
 
-        if(data.getNotificationType() == NotificationType.LDM_NOTIFICATION) {
+        if(data.getNotificationType().equals(NotificationType.LDM_NOTIFICATION)) {
             LdmObject lo = (LdmObject) data.getObject();
             switch (lo.getObjectType().toString()) {
                 case "MAP":
@@ -902,7 +914,7 @@ public class MessageDetailsFragment extends Fragment {
 
             case "TimeStamp":
                 if (lo.getTimestamp() != null)
-                    tv.setText(String.valueOf(lo.getTimestamp().getTime()));
+                    tv.setText(String.valueOf(timeStampRepresentationConverter(427719083694L)));
                 else
                     tv.setText("null");
                 break;
@@ -943,19 +955,19 @@ public class MessageDetailsFragment extends Fragment {
                 break;
 
             case "1.IntersectionState ID":
-                if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 1 && lo.getIntersectionStates().get(0).getId() != null)
-                    tv.setText(lo.getIntersectionStates().get(0).getId().toString());
+                if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 1 )
+                    tv.setText(String.valueOf(lo.getIntersectionStates().get(0).getId()));
                 else
                     tv.setText("null");
                 break;
-
+/*
             case "1.IntersectionState LaneCount":
                 if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 1 && lo.getIntersectionStates().get(0).getLaneCount() != null)
                     tv.setText(lo.getIntersectionStates().get(0).getLaneCount().toString());
                 else
                     tv.setText("null");
                 break;
-
+*/
             case "1.IntersectionState Revision":
                 if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 1)
                     tv.setText(String.valueOf(lo.getIntersectionStates().get(0).getRevision()));
@@ -971,11 +983,11 @@ public class MessageDetailsFragment extends Fragment {
                 break;
 
             case "2.IntersectionState ID":
-                if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 2 && lo.getIntersectionStates().get(1).getId() != null)
-                    tv.setText(lo.getIntersectionStates().get(1).getId().toString());
+                if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 2)
+                    tv.setText(String.valueOf(lo.getIntersectionStates().get(1).getId()));
                 else
                     tv.setText("null");
-                break;
+            /*    break;
 
             case "2.IntersectionState LaneCount":
                 if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 2 && lo.getIntersectionStates().get(1).getLaneCount() != null)
@@ -983,7 +995,7 @@ public class MessageDetailsFragment extends Fragment {
                 else
                     tv.setText("null");
                 break;
-
+*/
             case "2.IntersectionState Revision":
                 if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 2)
                     tv.setText(String.valueOf(lo.getIntersectionStates().get(1).getRevision()));
@@ -999,19 +1011,19 @@ public class MessageDetailsFragment extends Fragment {
                 break;
 
             case "3.IntersectionState ID":
-                if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 3 && lo.getIntersectionStates().get(2).getId() != null)
-                    tv.setText(lo.getIntersectionStates().get(2).getId().toString());
+                if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 3)
+                    tv.setText(String.valueOf(lo.getIntersectionStates().get(2).getId()));
                 else
                     tv.setText("null");
                 break;
-
+/*
             case "3.IntersectionState LaneCount":
                 if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 3 && lo.getIntersectionStates().get(2).getLaneCount() != null)
                     tv.setText(lo.getIntersectionStates().get(2).getLaneCount().toString());
                 else
                     tv.setText("null");
                 break;
-
+*/
             case "3.IntersectionState Revision":
                 if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 3)
                     tv.setText(String.valueOf(lo.getIntersectionStates().get(2).getRevision()));
@@ -1027,19 +1039,19 @@ public class MessageDetailsFragment extends Fragment {
                 break;
 
             case "4.IntersectionState ID":
-                if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 4 && lo.getIntersectionStates().get(3).getId() != null)
-                    tv.setText(lo.getIntersectionStates().get(3).getId().toString());
+                if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 4)
+                    tv.setText(String.valueOf(lo.getIntersectionStates().get(3).getId()));
                 else
                     tv.setText("null");
                 break;
-
+/*
             case "4.IntersectionState LaneCount":
                 if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 4 && lo.getIntersectionStates().get(3).getLaneCount() != null)
                     tv.setText(lo.getIntersectionStates().get(3).getLaneCount().toString());
                 else
                     tv.setText("null");
                 break;
-
+*/
             case "4.IntersectionState Revision":
                 if (lo.getIntersectionStates() != null && lo.getIntersectionStates().size() >= 4)
                     tv.setText(String.valueOf(lo.getIntersectionStates().get(3).getRevision()));
@@ -1050,5 +1062,13 @@ public class MessageDetailsFragment extends Fragment {
             default:
                 tv.setText("null");
         }
+    }
+
+    private String timeStampRepresentationConverter(Long timeStamp) {
+        ZonedDateTime utcDateTime = ZonedDateTime.ofInstant(
+                Instant.ofEpochMilli(timeStamp + UTC_MILLISECONDS_UNTIL_2004 - (37 - LEAP_SECONDS_UNTIL_2004) * 1000),
+                ZoneId.of("UTC")
+        );
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss XXX").format(utcDateTime.withZoneSameInstant(ZoneId.systemDefault()));
     }
 }
