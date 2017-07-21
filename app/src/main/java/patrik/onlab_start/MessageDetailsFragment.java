@@ -14,7 +14,6 @@ import com.commsignia.v2x.utils.units.DegreeUnit;
 import com.commsignia.v2x.utils.units.LengthUnit;
 import com.commsignia.v2x.utils.units.SpeedUnit;
 import com.commsignia.v2x.utils.units.TemperatureUnit;
-import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import org.threeten.bp.Instant;
 import org.threeten.bp.ZoneId;
@@ -22,8 +21,6 @@ import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -914,7 +911,7 @@ public class MessageDetailsFragment extends Fragment {
 
             case "TimeStamp":
                 if (lo.getTimestamp() != null)
-                    tv.setText(String.valueOf(timeStampRepresentationConverter(427719083694L)));
+                    tv.setText(lo.getTimestamp().toString());
                 else
                     tv.setText("null");
                 break;
