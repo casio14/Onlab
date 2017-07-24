@@ -3,14 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="192dp"
     android:background="?attr/colorPrimaryDark"
-    android:padding="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:orientation="vertical"
     android:gravity="bottom">
+    <ImageView android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:background="@drawable/nav_image">
+
+    </ImageView>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Username"
+        android:text="V2X Diagnostics Application"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 </LinearLayout>

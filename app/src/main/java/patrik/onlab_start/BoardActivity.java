@@ -6,29 +6,15 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
-import com.commsignia.v2x.client.ITSApplication;
-import com.commsignia.v2x.client.ITSEventAdapter;
-import com.commsignia.v2x.client.MessageSet;
-import com.commsignia.v2x.client.exception.ClientException;
-import com.commsignia.v2x.client.model.FacilityNotification;
-import com.commsignia.v2x.client.model.FacilitySubscriptionMessages;
-import com.commsignia.v2x.client.model.LdmFilter;
-import com.commsignia.v2x.client.model.LdmObject;
-import com.commsignia.v2x.client.model.LdmObjectType;
 
 import java.util.HashMap;
-import java.util.concurrent.TimeoutException;
 
-import patrik.onlab_start.Model.NotificationType;
 import patrik.onlab_start.Model.PacketAncestor;
 import patrik.onlab_start.Model.PacketCommunicator;
-import patrik.onlab_start.NavigationBoard.fragments.GraphFragment;
 import patrik.onlab_start.NavigationBoard.MenuItemId;
+import patrik.onlab_start.NavigationBoard.fragments.GraphFragment;
 
 public class BoardActivity extends AppCompatActivity implements PacketCommunicator {
     private NavigationView navigationView;
@@ -43,11 +29,11 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
 
 
     //ITS application properties
-    public static ITSApplication itsApplication = null;
-    public static final int DEFAULT_ITS_AID = 55;
-    public static final String DEFAULT_TARGET_HOST = "192.168.0.96";
-    public static final int DEFAULT_TARGET_PORT = 7942;
-    public static final MessageSet DEFAULT_MESSAGE_SET = MessageSet.D;
+//    public static ITSApplication itsApplication = null;
+//    public static final int DEFAULT_ITS_AID = 55;
+//    public static final String DEFAULT_TARGET_HOST = "192.168.0.96";
+//    public static final int DEFAULT_TARGET_PORT = 7942;
+//    public static final MessageSet DEFAULT_MESSAGE_SET = MessageSet.D;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +52,7 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
         Intent intent = getIntent();
         HashMap<String,String > selectedPropertiesValues = (HashMap<String, String>) intent.getSerializableExtra("selectedValues");
 
-        //Start the ITS Application
+       /* //Start the ITS Application
         try {
             itsApplication = new ITSApplication(DEFAULT_ITS_AID, DEFAULT_TARGET_HOST, DEFAULT_TARGET_PORT, DEFAULT_MESSAGE_SET);
 
@@ -141,7 +127,7 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
         } finally {
             if (itsApplication != null)
                 Log.d("Request", "was sent.");
-        }
+        }*/
 
         setUpNavigation();
 
