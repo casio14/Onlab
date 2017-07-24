@@ -131,4 +131,8 @@
         <item>4.IntersectionState LaneCount</item>
         <item>4.IntersectionState Revision</item>
     </string-array>
+
+    <string name="graph_menu_item">Graphs</string>
+    <string name="list_menu_item">Packet List</string>
+    <string name="livemap_menu_item">Live Map</string>
 </resources>

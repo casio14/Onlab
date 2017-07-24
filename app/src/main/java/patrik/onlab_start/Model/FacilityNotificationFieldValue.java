@@ -24,6 +24,10 @@ public class FacilityNotificationFieldValue {
     }
 
     public String getDENMValue() {
+
+        if(field==null)
+            return "null";
+
         switch (field) {
             case "ActionID":
                 if (facilityNotification.getDENM().getActionID() != null)
@@ -176,6 +180,9 @@ public class FacilityNotificationFieldValue {
     }
 
     public String getCAMValue() {
+        if(field==null)
+            return "null";
+
         if (facilityNotification.getStationObject() == null) {
             return "null";
         }

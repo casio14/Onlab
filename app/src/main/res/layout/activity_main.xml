@@ -21,22 +21,22 @@
         android:orientation="vertical"
         android:weightSum="10">
 
-        <FrameLayout
-            android:id="@+id/messageFrame"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="7"
-            android:background="@drawable/rounded_fragment_stlye"
-            android:padding="3dp">
+        <!--<FrameLayout-->
+            <!--android:id="@+id/messageFrame"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:layout_weight="7"-->
+            <!--android:background="@drawable/rounded_fragment_stlye"-->
+            <!--android:padding="3dp">-->
 
-            <fragment
-                android:id="@+id/messageFragment"
-                android:name="patrik.onlab_start.MessageListFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"></fragment>
+            <!--<fragment-->
+                <!--android:id="@+id/messageFragment"-->
+                <!--android:name="patrik.onlab_start.MessageListFragment"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"></fragment>-->
 
-        </FrameLayout>
+        <!--</FrameLayout>-->
 
         <LinearLayout
             android:id="@+id/spinnerLayout"
@@ -163,34 +163,34 @@
         android:orientation="vertical"
         android:weightSum="2">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="1dp"
-            android:layout_weight="1"
-            android:padding="3dp">
+        <!--<FrameLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginBottom="1dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:padding="3dp">-->
 
-            <fragment
-                android:id="@+id/detailsFragment"
-                android:name="patrik.onlab_start.MessageDetailsFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"></fragment>
+            <!--<fragment-->
+                <!--android:id="@+id/detailsFragment"-->
+                <!--android:name="patrik.onlab_start.MessageDetailsFragment"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"></fragment>-->
 
-        </FrameLayout>
+        <!--</FrameLayout>-->
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="1dp"
-            android:layout_weight="1">
+        <!--<FrameLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginTop="1dp"-->
+            <!--android:layout_weight="1">-->
 
-            <fragment
-                android:id="@+id/graphFragment"
-                android:name="patrik.onlab_start.GraphFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"></fragment>
+            <!--<fragment-->
+                <!--android:id="@+id/graphFragment"-->
+                <!--android:name="patrik.onlab_start.NavigationBoard.fragments.GraphFragment"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"></fragment>-->
 
-        </FrameLayout>
+        <!--</FrameLayout>-->
 
     </LinearLayout>
 

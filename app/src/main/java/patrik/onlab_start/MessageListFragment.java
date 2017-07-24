@@ -30,7 +30,7 @@ import patrik.onlab_start.Model.PacketCommunicator;
  * Created by Patrik on 2017.03.07..
  * Show the captured packets
  */
-public class MessageListFragment extends ListFragment {
+public class MessageListFragment extends ListFragment{
 
     MessageAdapter adapter;
     PacketCommunicator communicator; /* The interface object to call the MainActivity update() method */
@@ -120,4 +120,5 @@ public class MessageListFragment extends ListFragment {
         adapter = new MessageAdapter(getActivity(),android.R.layout.simple_list_item_1,values2,selectedValues);
         setListAdapter(adapter);
     }
+
 }

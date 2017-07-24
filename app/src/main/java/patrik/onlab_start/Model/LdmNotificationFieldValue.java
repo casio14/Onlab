@@ -20,14 +20,26 @@ public class LdmNotificationFieldValue {
     }
 
     public String getDENMValue() {
+
+        if(field==null)
+            return "null";
+
         return "null";
     }
 
     public String getCAMValue() {
+
+        if(field==null)
+            return "null";
+
         return "null";
     }
 
     public String getSPATValue() {
+
+        if(field==null)
+            return "null";
+
         switch (field) {
             case "Longitude":
                 if (ldmObject.getLongitude() != null)
@@ -175,6 +187,10 @@ public class LdmNotificationFieldValue {
     }
 
     public String getMAPValue() {
+
+        if(field==null)
+            return "null";
+
         switch (field) {
             case "Longitude":
                 if (ldmObject.getLongitude() != null)

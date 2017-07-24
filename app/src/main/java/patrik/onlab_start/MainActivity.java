@@ -1,6 +1,7 @@
 package patrik.onlab_start;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,28 +19,19 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.commsignia.v2x.client.ITSApplication;
-import com.commsignia.v2x.client.ITSEventAdapter;
 
 import com.commsignia.v2x.client.MessageSet;
-import com.commsignia.v2x.client.exception.ClientException;
-import com.commsignia.v2x.client.model.FacilityNotification;
-import com.commsignia.v2x.client.model.FacilitySubscriptionMessages;
-import com.commsignia.v2x.client.model.LdmFilter;
-import com.commsignia.v2x.client.model.LdmObject;
-import com.commsignia.v2x.client.model.LdmObjectType;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeoutException;
 
 import patrik.onlab_start.Model.DataCommunicator;
-import patrik.onlab_start.Model.NotificationType;
 import patrik.onlab_start.Model.PacketAncestor;
 import patrik.onlab_start.Model.PacketCommunicator;
+import patrik.onlab_start.NavigationBoard.fragments.GraphFragment;
 
 public class MainActivity extends AppCompatActivity implements PacketCommunicator, DataCommunicator {
 
@@ -74,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
 
     //Selected Properties
     Map<String,Integer> selectedPropertiesPositions;
-    Map<String,String> selectedPropertiesValues;
+    HashMap<String,String> selectedPropertiesValues;
 
     String selected = "DENM";
 
@@ -87,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
     //ITS application properties
     public static ITSApplication itsApplication = null;
     public static final int DEFAULT_ITS_AID = 55;
-    public static final String DEFAULT_TARGET_HOST = "192.168.0.96";
+    public static final String DEFAULT_TARGET_HOST = "192.168.0.76";
     public static final int DEFAULT_TARGET_PORT = 7942;
     public static final MessageSet DEFAULT_MESSAGE_SET = MessageSet.D;
 
@@ -107,9 +99,9 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         //Set approtiate listeners for the spinners
         spinnerListeners();
 
-
+/*
         if (listFragment == null)
-            listFragment = (MessageListFragment) getSupportFragmentManager().findFragmentById(R.id.messageFragment);
+            listFragment = (MessageListFragment) getSupportFragmentManager().findFragmentById(R.id.messageFragment);*/
 
         //Set approtiate listeners for the buttons
         initializeButtonListeners();
@@ -142,14 +134,14 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
 
     //Show a message info in the MessageDetailsFragment
     public void updateDataDetails(PacketAncestor data) {
-
+/*
         //Set the appropriate fragment
         if (messageDetailsFragment == null) {
             messageDetailsFragment = (MessageDetailsFragment) getFragmentManager().findFragmentById(R.id.detailsFragment);
         }
 
         //Call the MessageDetailsFragment appropriate method to update values
-        messageDetailsFragment.changeData(data);
+        messageDetailsFragment.changeData(data);*/
     }
 
     public void showSaveAlertDialog() {
@@ -225,10 +217,10 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
     //Send incoming packet infos to the GraphFragment
     @Override
     public void sendDatasForShowing(double count, double avarageSNR) {
-        if (graphFragment == null) {
+        /*if (graphFragment == null) {
             graphFragment = (GraphFragment) getFragmentManager().findFragmentById(R.id.graphFragment);
         }
-        graphFragment.updateDataFromActivity(count,avarageSNR);
+        graphFragment.updateDataFromActivity(count,avarageSNR);*/
     }
 
     public void spinnerListeners() {
@@ -425,10 +417,10 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         saveButton.setVisibility(View.INVISIBLE);
         restartButton.setVisibility(View.INVISIBLE);
 
-        //Set the messageFragment invisible
+       /* //Set the messageFragment invisible
         FrameLayout messageFrame = (FrameLayout) findViewById(R.id.messageFrame);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 0, 0);
-        messageFrame.setLayoutParams(params);
+        messageFrame.setLayoutParams(params);*/
 
         //Set the spinnerLayout larger
         final LinearLayout spinnerLayout = (LinearLayout) findViewById(R.id.spinnerLayout);
@@ -447,82 +439,90 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                     return;
                 }
 
-                //Start the ITS Application
-                try {
-                    itsApplication = new ITSApplication(DEFAULT_ITS_AID, DEFAULT_TARGET_HOST, DEFAULT_TARGET_PORT, DEFAULT_MESSAGE_SET);
-
-                    itsApplication.connect(10000);
-
-                    itsApplication.commands().registerBlocking();
-
-                    itsApplication.commands().setDeviceTimeBlocking(System.currentTimeMillis() / 1000L);
-
-                    String id = itsApplication.getHost(); // Get host
-                    Log.d("ITS station ID:", String.valueOf(id));
+                updateSelectedPropertiesValuesHashMap();
 
 
-                    final ITSApplication finalItsApplication = itsApplication;
+//                //Start the ITS Application
+//                try {
+//                    itsApplication = new ITSApplication(DEFAULT_ITS_AID, DEFAULT_TARGET_HOST, DEFAULT_TARGET_PORT, DEFAULT_MESSAGE_SET);
+//
+//                    itsApplication.connect(10000);
+//
+//                    itsApplication.commands().registerBlocking();
+//
+//                    itsApplication.commands().setDeviceTimeBlocking(System.currentTimeMillis() / 1000L);
+//
+//                    String id = itsApplication.getHost(); // Get host
+//                    Log.d("ITS station ID:", String.valueOf(id));
+//
+//
+//                    final ITSApplication finalItsApplication = itsApplication;
+//
+//                    //Add evenet listeners
+//                    try {
+//                        finalItsApplication.addEventListener(new ITSEventAdapter() {    // Facility subscribe
+//                            @Override
+//                            public void onFacilityNotificationReceived(final FacilityNotification facilityNotification) {
+//                                //that we can update the UI from other thread
+//                                runOnUiThread(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        synchronized (facilityNotification) {
+//                                            PacketAncestor packet =
+//                                                    new PacketAncestor(facilityNotification, NotificationType.FAC_NOTIFICATION);
+//                                            listFragment.adapter.addPacket(packet);
+//                                            messageCounter++;
+//                                            snrSum += facilityNotification.getRssi();
+//                                            Log.d("SNR : ",String.valueOf(facilityNotification.getRssi()));
+//                                        }
+//                                        Log.d("Facility not. received", facilityNotification.getType().toString());
+//                                    }
+//                                });
+//                            }
+//
+//
+//
+//                            @Override
+//                            public void onLdmNotificationReceived(final LdmObject ldmObject) {
+//                                runOnUiThread(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        synchronized (ldmObject) {
+//                                            PacketAncestor packet = new PacketAncestor(ldmObject, NotificationType.LDM_NOTIFICATION);
+//                                            listFragment.adapter.addPacket(packet);
+//                                            messageCounter++;
+//                                            snrSum += ldmObject.getRssiDbm();
+//                                        }
+//                                        Log.d("Ldm received", ldmObject.getNotificationType().toString());
+//                                    }
+//                                });
+//                            }
+//                        });
+//
+//
+//                        finalItsApplication.commands().facilitySubscribeBlocking(new FacilitySubscriptionMessages().setCamIncluded(true).setDenmIncluded(true));
+//                        finalItsApplication.commands().ldmSubscribeBlocking(
+//                                new LdmFilter().setObjectTypeFilter(LdmObjectType.MAP, LdmObjectType.SPAT)
+//                        );
+//
+//                    } catch (Exception e) {
+//                        Log.d("ClientException: ", "Cannot execute API commands");
+//                    }
+//
+//
+//                } catch (InterruptedException | ClientException |TimeoutException e) {
+//                    e.printStackTrace();
+//                    Toast.makeText(getApplicationContext(),"ERROR",Toast.LENGTH_LONG).show();
+//                    return;
+//                } finally {
+//                    if (itsApplication != null)
+//                        Log.d("Request", "was sent.");
+//                }
 
-                    //Add evenet listeners
-                    try {
-                        finalItsApplication.addEventListener(new ITSEventAdapter() {    // Facility subscribe
-                            @Override
-                            public void onFacilityNotificationReceived(final FacilityNotification facilityNotification) {
-                                //that we can update the UI from other thread
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        synchronized (facilityNotification) {
-                                            PacketAncestor packet =
-                                                    new PacketAncestor(facilityNotification, NotificationType.FAC_NOTIFICATION);
-                                            listFragment.adapter.addPacket(packet);
-                                            messageCounter++;
-                                            snrSum += facilityNotification.getRssi();
-                                            Log.d("SNR : ",String.valueOf(facilityNotification.getRssi()));
-                                        }
-                                        Log.d("Facility not. received", facilityNotification.getType().toString());
-                                    }
-                                });
-                            }
-
-
-
-                            @Override
-                            public void onLdmNotificationReceived(final LdmObject ldmObject) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        synchronized (ldmObject) {
-                                            PacketAncestor packet = new PacketAncestor(ldmObject, NotificationType.LDM_NOTIFICATION);
-                                            listFragment.adapter.addPacket(packet);
-                                            messageCounter++;
-                                            snrSum += ldmObject.getRssiDbm();
-                                        }
-                                        Log.d("Ldm received", ldmObject.getNotificationType().toString());
-                                    }
-                                });
-                            }
-                        });
-
-
-                        finalItsApplication.commands().facilitySubscribeBlocking(new FacilitySubscriptionMessages().setCamIncluded(true).setDenmIncluded(true));
-                        finalItsApplication.commands().ldmSubscribeBlocking(
-                                new LdmFilter().setObjectTypeFilter(LdmObjectType.MAP, LdmObjectType.SPAT)
-                        );
-
-                    } catch (Exception e) {
-                        Log.d("ClientException: ", "Cannot execute API commands");
-                    }
-
-
-                } catch (InterruptedException | ClientException |TimeoutException e) {
-                    e.printStackTrace();
-                    return;
-                } finally {
-                    if (itsApplication != null)
-                        Log.d("Request", "was sent.");
-                }
-
+                Intent intent = new Intent(getApplicationContext(),BoardActivity.class);
+                intent.putExtra("selectedValues",selectedPropertiesValues);
+                startActivity(intent);
+/*
                 //Set invisible the spinnerLayout
                 final LinearLayout spinnerLayout = (LinearLayout) findViewById(R.id.spinnerLayout);
                 LinearLayout.LayoutParams paramsSpinnerLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 0, 0);
@@ -576,7 +576,7 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                 startButton.setVisibility(View.INVISIBLE);
                 saveButton.setVisibility(View.INVISIBLE);
                 stopButton.setVisibility(View.VISIBLE);
-                restartButton.setVisibility(View.VISIBLE);
+                restartButton.setVisibility(View.VISIBLE);*/
             }
         });
 
@@ -584,10 +584,10 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (graphFragment == null) {
+                /*if (graphFragment == null) {
                     graphFragment = (GraphFragment) getFragmentManager().findFragmentById(R.id.graphFragment);
                 }
-                graphFragment.onPause();
+                graphFragment.onPause();*/
 
                 snrSum=0;
                 avarageSNR=0;
@@ -615,16 +615,16 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         restartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (graphFragment == null) {
+                /*if (graphFragment == null) {
                     graphFragment = (GraphFragment) getFragmentManager().findFragmentById(R.id.graphFragment);
-                }
+                }*/
                 graphFragment.onPause();
                 graphFragment.clearDatas();
-
+/*
                 if(messageDetailsFragment ==null)
                     messageDetailsFragment= (MessageDetailsFragment) getFragmentManager().findFragmentById(R.id.detailsFragment);
                 messageDetailsFragment.clearDetails();
-
+*/
                 //Set the spinnerLayout to the original size
                 final LinearLayout spinnerLayout = (LinearLayout) findViewById(R.id.spinnerLayout);
                 LinearLayout.LayoutParams paramsSpinnerLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 0, 9);

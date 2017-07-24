@@ -1,9 +1,9 @@
-package patrik.onlab_start;
+package patrik.onlab_start.NavigationBoard.fragments;
 
-import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,8 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.Serializable;
+
+import patrik.onlab_start.R;
 
 /**
  * Created by Patrik on 2017.03.08..
