@@ -6,15 +6,30 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.commsignia.v2x.client.ITSApplication;
+import com.commsignia.v2x.client.ITSEventAdapter;
+import com.commsignia.v2x.client.MessageSet;
+import com.commsignia.v2x.client.exception.ClientException;
+import com.commsignia.v2x.client.model.FacilityNotification;
+import com.commsignia.v2x.client.model.FacilitySubscriptionMessages;
+import com.commsignia.v2x.client.model.LdmFilter;
+import com.commsignia.v2x.client.model.LdmObject;
+import com.commsignia.v2x.client.model.LdmObjectType;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeoutException;
 
+import patrik.onlab_start.Model.NotificationType;
 import patrik.onlab_start.Model.PacketAncestor;
 import patrik.onlab_start.Model.PacketCommunicator;
 import patrik.onlab_start.NavigationBoard.MenuItemId;
 import patrik.onlab_start.NavigationBoard.fragments.GraphFragment;
+import patrik.onlab_start.NavigationBoard.fragments.MapFragment;
 
 public class BoardActivity extends AppCompatActivity implements PacketCommunicator {
     private NavigationView navigationView;
@@ -25,15 +40,17 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
 
     private MessageListFragment listFragment;
 
+    private MapFragment mapFragment;
+
     private int selectedMenuItemIndex = 0;
 
 
-    //ITS application properties
-//    public static ITSApplication itsApplication = null;
-//    public static final int DEFAULT_ITS_AID = 55;
-//    public static final String DEFAULT_TARGET_HOST = "192.168.0.96";
-//    public static final int DEFAULT_TARGET_PORT = 7942;
-//    public static final MessageSet DEFAULT_MESSAGE_SET = MessageSet.D;
+    // ITS application properties
+    public static ITSApplication itsApplication = null;
+    public static final int DEFAULT_ITS_AID = 55;
+    public static final String DEFAULT_TARGET_HOST = "192.168.0.96";
+    public static final int DEFAULT_TARGET_PORT = 7942;
+    public static final MessageSet DEFAULT_MESSAGE_SET = MessageSet.D;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +63,16 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
         if (graphFragment == null)
             graphFragment = new GraphFragment();
 
+        if (mapFragment == null)
+            mapFragment = new MapFragment();
+
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         Intent intent = getIntent();
         HashMap<String,String > selectedPropertiesValues = (HashMap<String, String>) intent.getSerializableExtra("selectedValues");
 
-       /* //Start the ITS Application
+        //Start the ITS Application
         try {
             itsApplication = new ITSApplication(DEFAULT_ITS_AID, DEFAULT_TARGET_HOST, DEFAULT_TARGET_PORT, DEFAULT_MESSAGE_SET);
 
@@ -100,6 +120,9 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
                                 synchronized (ldmObject) {
                                     PacketAncestor packet = new PacketAncestor(ldmObject, NotificationType.LDM_NOTIFICATION);
                                     listFragment.adapter.addPacket(packet);
+                                    if(!mapFragment.isNull()) {
+                                        mapFragment.setMarktoCarPosition(ldmObject.getLatitude(),ldmObject.getLongitude());
+                                    }
 //                                    messageCounter++;
 //                                    snrSum += ldmObject.getRssiDbm();
                                 }
@@ -112,7 +135,7 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
 
                 finalItsApplication.commands().facilitySubscribeBlocking(new FacilitySubscriptionMessages().setCamIncluded(true).setDenmIncluded(true));
                 finalItsApplication.commands().ldmSubscribeBlocking(
-                        new LdmFilter().setObjectTypeFilter(LdmObjectType.MAP, LdmObjectType.SPAT)
+                        new LdmFilter().setObjectTypeFilter(LdmObjectType.MAP, LdmObjectType.SPAT, LdmObjectType.BSM)
                 );
 
             } catch (Exception e) {
@@ -122,12 +145,12 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
 
         } catch (InterruptedException | ClientException |TimeoutException e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(),"ERROR",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"ERROR", Toast.LENGTH_LONG).show();
             return;
         } finally {
             if (itsApplication != null)
                 Log.d("Request", "was sent.");
-        }*/
+        }
 
         setUpNavigation();
 
@@ -144,11 +167,12 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
         fragments = new Fragment[]{
                 listFragment,
                 graphFragment,
+                mapFragment
         };
 
         addNavigationMenuItem(0,fragments[0],MenuItemId.PACKETS_ITEM);
         addNavigationMenuItem(1,fragments[1],MenuItemId.GRAPHS_ITEM);
-//        addNavigationMenuItem(2,fragments[2],MenuItemId.LIVEMAP_ITEM);
+        addNavigationMenuItem(2,fragments[2],MenuItemId.LIVEMAP_ITEM);
 
         navigationView.getMenu().setGroupCheckable(1, true, true);
     }
