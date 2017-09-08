@@ -27,7 +27,7 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
-        multiDexEnabled  true
+        multiDexEnabled true
 
     }
     buildTypes {
@@ -35,7 +35,7 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug{
+        debug {
             debuggable true
         }
         compileOptions {
@@ -51,20 +51,21 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.commsignia:v2x-client:1.16.0-SNAPSHOT'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.jjoe64:graphview:4.2.1'
     compile files('libs/log4j-1.2.17.jar')
     compile files('libs/slf4j-simple-1.7.7.jar')
     compile files('libs/slf4j-api-1.7.7.jar')
     compile files('libs/jsr305-3.0.0.jar')
-    compile 'com.google.android.gms:play-services-appindexing:9.8.0'
-    compile 'com.jakewharton.threetenabp:threetenabp:1.0.5'
 
-    compile 'com.google.android.gms:play-services-maps:9.8.0'
 
     sourceCompatibility = '1.7'
     targetCompatibility = '1.7'
 
+    compile 'com.commsignia:v2x-client:1.16.1-SNAPSHOT'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.jjoe64:graphview:4.2.1'
+    compile 'com.google.android.gms:play-services-appindexing:9.8.0'
+    compile 'com.jakewharton.threetenabp:threetenabp:1.0.5'
+    compile 'com.google.android.gms:play-services-maps:9.8.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
 }

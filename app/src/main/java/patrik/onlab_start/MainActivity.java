@@ -51,15 +51,20 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
     Spinner firstPropertySpinner;
     Spinner secondPropertySpinner;
     Spinner thirdPropertySpinner;
+    Spinner messageSetsSpinner;
 
     //Adapters for Spinners
     ArrayAdapter<CharSequence> adapterDENM_Properties;
     ArrayAdapter<CharSequence> adapterCAM_Properties;
     ArrayAdapter<CharSequence> adapterMAP_Properties;
     ArrayAdapter<CharSequence> adapterSPAT_Properties;
+    ArrayAdapter<CharSequence> adapterBSM_Properties;
 
     //EditTExt
     EditText measuringInterval_eT;
+    EditText applicationID;
+    EditText deviceAddress;
+    EditText portNumber;
 
     //Timer
     Timer timer;
@@ -133,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
     }*/
 
     //Show a message info in the MessageDetailsFragment
-    public void updateDataDetails(PacketAncestor data) {
+    public void showPacketDetails(PacketAncestor data) {
 /*
         //Set the appropriate fragment
         if (messageDetailsFragment == null) {
@@ -290,6 +295,22 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                     Log.d("ÉRTÉKEK: ", selectedPropertiesPositions.get("SPAT_1") + " " + selectedPropertiesPositions.get("SPAT_2")
                             + " " + selectedPropertiesPositions.get("SPAT_3"));
                 }
+
+                if (typeSpinner.getSelectedItem().toString().equals("BSM")) {
+
+                    selected = "BSM";
+
+                    firstPropertySpinner.setAdapter(adapterBSM_Properties);
+                    secondPropertySpinner.setAdapter(adapterBSM_Properties);
+                    thirdPropertySpinner.setAdapter(adapterBSM_Properties);
+
+                    firstPropertySpinner.setSelection(selectedPropertiesPositions.get("BSM_1"));
+                    secondPropertySpinner.setSelection(selectedPropertiesPositions.get("BSM_2"));
+                    thirdPropertySpinner.setSelection(selectedPropertiesPositions.get("BSM_3"));
+
+                    Log.d("ÉRTÉKEK: ", selectedPropertiesPositions.get("BSM_1") + " " + selectedPropertiesPositions.get("BSM_2")
+                            + " " + selectedPropertiesPositions.get("BSM_3"));
+                }
             }
 
             @Override
@@ -313,6 +334,9 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                 }
                 if (typeSpinner.getSelectedItem().toString().equals("SPAT")) {
                     selectedPropertiesPositions.replace("SPAT_1",firstPropertySpinner.getSelectedItemPosition());
+                }
+                if (typeSpinner.getSelectedItem().toString().equals("BSM")) {
+                    selectedPropertiesPositions.replace("BSM_1",firstPropertySpinner.getSelectedItemPosition());
                 }
 
             }
@@ -341,6 +365,10 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                 if (typeSpinner.getSelectedItem().toString().equals("SPAT")) {
                     selectedPropertiesPositions.replace("SPAT_2",secondPropertySpinner.getSelectedItemPosition());
                 }
+
+                if (typeSpinner.getSelectedItem().toString().equals("BSM")) {
+                    selectedPropertiesPositions.replace("BSM_2",secondPropertySpinner.getSelectedItemPosition());
+                }
             }
 
             @Override
@@ -366,6 +394,10 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
 
                 if(typeSpinner.getSelectedItem().toString().equals("SPAT")) {
                     selectedPropertiesPositions.replace("SPAT_3",thirdPropertySpinner.getSelectedItemPosition());
+                }
+
+                if(typeSpinner.getSelectedItem().toString().equals("BSM")) {
+                    selectedPropertiesPositions.replace("BSM_3",thirdPropertySpinner.getSelectedItemPosition());
                 }
             }
 
@@ -394,9 +426,18 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         adapterSPAT_Properties = ArrayAdapter.createFromResource(this, R.array.spatProperties, android.R.layout.simple_spinner_item);
         adapterType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+        adapterBSM_Properties = ArrayAdapter.createFromResource(this, R.array.bsmProperties, android.R.layout.simple_spinner_item);
+        adapterType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ArrayAdapter adapterMessageSets = ArrayAdapter.createFromResource(this, R.array.messageSets, android.R.layout.simple_spinner_item);
+        adapterType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         firstPropertySpinner.setAdapter(adapterDENM_Properties);
         secondPropertySpinner.setAdapter(adapterDENM_Properties);
         thirdPropertySpinner.setAdapter(adapterDENM_Properties);
+
+        messageSetsSpinner.setAdapter(adapterMessageSets);
+        messageSetsSpinner.setSelection(adapterMessageSets.getPosition("D"));
     }
 
     public void componentInitialization() {
@@ -410,8 +451,12 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         firstPropertySpinner = (Spinner) findViewById(R.id.firstPropertySpinner);
         secondPropertySpinner = (Spinner) findViewById(R.id.secondPropertySpinner);
         thirdPropertySpinner = (Spinner) findViewById(R.id.thirdPropertySpinner);
+        messageSetsSpinner = (Spinner) findViewById(R.id.messageSetsSpinner);
 
         measuringInterval_eT = (EditText) findViewById(R.id.eTsetInterval);
+        applicationID = (EditText) findViewById(R.id.et_appID);
+        deviceAddress = (EditText) findViewById(R.id.et_deviceAddress);
+        portNumber = (EditText) findViewById(R.id.et_portNumber);
 
         stopButton.setVisibility(View.INVISIBLE);
         saveButton.setVisibility(View.INVISIBLE);
@@ -434,10 +479,8 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
             @Override
             public void onClick(View view) {
 
-                if(measuringInterval_eT.getText().toString().equals("")) {
-                    Toast.makeText(getApplicationContext(),"Please set a measuring interval",Toast.LENGTH_LONG).show();
+                if(!validateEditTexts())
                     return;
-                }
 
                 updateSelectedPropertiesValuesHashMap();
 
@@ -521,6 +564,10 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
 
                 Intent intent = new Intent(getApplicationContext(),BoardActivity.class);
                 intent.putExtra("selectedValues",selectedPropertiesValues);
+                intent.putExtra("applicationID",applicationID.getText().toString());
+                intent.putExtra("deviceAddress",deviceAddress.getText().toString());
+                intent.putExtra("portNumber",portNumber.getText().toString());
+                intent.putExtra("messageSet",messageSetsSpinner.getSelectedItem().toString());
                 startActivity(intent);
 /*
                 //Set invisible the spinnerLayout
@@ -665,6 +712,9 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         selectedPropertiesPositions.put("SPAT_1",0);
         selectedPropertiesPositions.put("SPAT_2",0);
         selectedPropertiesPositions.put("SPAT_3",0);
+        selectedPropertiesPositions.put("BSM_1",0);
+        selectedPropertiesPositions.put("BSM_2",0);
+        selectedPropertiesPositions.put("BSM_3",0);
 
         selectedPropertiesValues = new HashMap<>();
         selectedPropertiesValues.put("DENM_1","");
@@ -679,6 +729,9 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         selectedPropertiesValues.put("SPAT_1","");
         selectedPropertiesValues.put("SPAT_2","");
         selectedPropertiesValues.put("SPAT_3","");
+        selectedPropertiesValues.put("BSM_1","");
+        selectedPropertiesValues.put("BSM_2","");
+        selectedPropertiesValues.put("BSM_3","");
     }
 
     public void updateSelectedPropertiesValuesHashMap() {
@@ -697,6 +750,36 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         selectedPropertiesValues.replace("SPAT_1",adapterSPAT_Properties.getItem(selectedPropertiesPositions.get("SPAT_1")).toString());
         selectedPropertiesValues.replace("SPAT_2",adapterSPAT_Properties.getItem(selectedPropertiesPositions.get("SPAT_2")).toString());
         selectedPropertiesValues.replace("SPAT_3",adapterSPAT_Properties.getItem(selectedPropertiesPositions.get("SPAT_3")).toString());
+
+        selectedPropertiesValues.replace("BSM_1",adapterBSM_Properties.getItem(selectedPropertiesPositions.get("BSM_1")).toString());
+        selectedPropertiesValues.replace("BSM_2",adapterBSM_Properties.getItem(selectedPropertiesPositions.get("BSM_2")).toString());
+        selectedPropertiesValues.replace("BSM_3",adapterBSM_Properties.getItem(selectedPropertiesPositions.get("BSM_3")).toString());
+    }
+
+    public boolean validateEditTexts() {
+        String deviceAddressRegExp = "\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}";
+
+        if(measuringInterval_eT.getText().toString().equals("")) {
+            Toast.makeText(getApplicationContext(),"Invalid measuring interval!",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(applicationID.getText().toString().equals("")) {
+            Toast.makeText(getApplicationContext(),"Invalid application ID!",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(!deviceAddress.getText().toString().matches(deviceAddressRegExp)) {
+            Toast.makeText(getApplicationContext(),"Invalid device address!",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(portNumber.getText().toString().equals("")) {
+            Toast.makeText(getApplicationContext(),"Invalid port number!",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
     }
 
 }

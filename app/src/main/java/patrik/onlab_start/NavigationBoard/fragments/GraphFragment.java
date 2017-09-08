@@ -44,14 +44,13 @@ public class GraphFragment extends Fragment implements Serializable {
 
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setMinY(-60.0);
-        graph.getViewport().setMaxY(30.0);
+        graph.getViewport().setMaxY(110.0);
 
         // set manual X bounds
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(0);
 
         graph.getViewport().setScalable(true); // enables horizontal zooming and scrolling
-
 
         graph.addSeries(mSeries1);
         graph.addSeries(mSeries2);
@@ -93,4 +92,7 @@ public class GraphFragment extends Fragment implements Serializable {
         lastX++;
     }
 
+    public boolean isNull() {
+        return graph == null ? true : false;
+    }
 }

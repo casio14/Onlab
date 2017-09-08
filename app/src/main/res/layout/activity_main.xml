@@ -14,27 +14,29 @@
     tools:context="patrik.onlab_start.MainActivity">
 
     <LinearLayout
+        android:layout_margin="2dp"
         android:id="@+id/left_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:weightSum="10">
+        android:weightSum="10"
+        android:padding="10dp">
 
         <!--<FrameLayout-->
-            <!--android:id="@+id/messageFrame"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:layout_marginRight="5dp"-->
-            <!--android:layout_weight="7"-->
-            <!--android:background="@drawable/rounded_fragment_stlye"-->
-            <!--android:padding="3dp">-->
+        <!--android:id="@+id/messageFrame"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_marginRight="5dp"-->
+        <!--android:layout_weight="7"-->
+        <!--android:background="@drawable/rounded_fragment_stlye"-->
+        <!--android:padding="3dp">-->
 
-            <!--<fragment-->
-                <!--android:id="@+id/messageFragment"-->
-                <!--android:name="patrik.onlab_start.MessageListFragment"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"></fragment>-->
+        <!--<fragment-->
+        <!--android:id="@+id/messageFragment"-->
+        <!--android:name="patrik.onlab_start.MessageListFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"></fragment>-->
 
         <!--</FrameLayout>-->
 
@@ -92,8 +94,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -101,7 +103,7 @@
                     android:gravity="center_vertical"
                     android:text="Set the measuring interval:"
                     android:textSize="20dp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/eTsetInterval"
@@ -140,7 +142,7 @@
                 android:layout_height="35dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
-                android:background="@drawable/replay"/>
+                android:background="@drawable/replay" />
 
             <Button
                 android:id="@+id/mainSaveButton"
@@ -161,34 +163,91 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"
+        android:padding="10dp"
         android:weightSum="2">
 
-        <!--<FrameLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_marginBottom="1dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:padding="3dp">-->
+        <LinearLayout
+            android:layout_margin="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
 
-            <!--<fragment-->
-                <!--android:id="@+id/detailsFragment"-->
-                <!--android:name="patrik.onlab_start.MessageDetailsFragment"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"></fragment>-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Application ID:" />
+
+            <EditText
+                android:id="@+id/et_appID"
+                android:layout_width="match_parent"
+                android:inputType="numberSigned"
+                android:layout_height="wrap_content"
+                android:text="30"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="Device address:" />
+
+            <EditText
+                android:id="@+id/et_deviceAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="192.168.0.96"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="Port number:" />
+
+            <EditText
+                android:id="@+id/et_portNumber"
+                android:layout_width="match_parent"
+                android:inputType="numberSigned"
+                android:layout_height="wrap_content"
+                android:text="7942"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="MessageSet" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/messageSetsSpinner"></Spinner>
+        </LinearLayout>
+        <!--<FrameLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginBottom="1dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:padding="3dp">-->
+
+        <!--<fragment-->
+        <!--android:id="@+id/detailsFragment"-->
+        <!--android:name="patrik.onlab_start.MessageDetailsFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"></fragment>-->
 
         <!--</FrameLayout>-->
 
         <!--<FrameLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_marginTop="1dp"-->
-            <!--android:layout_weight="1">-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginTop="1dp"-->
+        <!--android:layout_weight="1">-->
 
-            <!--<fragment-->
-                <!--android:id="@+id/graphFragment"-->
-                <!--android:name="patrik.onlab_start.NavigationBoard.fragments.GraphFragment"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"></fragment>-->
+        <!--<fragment-->
+        <!--android:id="@+id/graphFragment"-->
+        <!--android:name="patrik.onlab_start.NavigationBoard.fragments.GraphFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"></fragment>-->
 
         <!--</FrameLayout>-->
 

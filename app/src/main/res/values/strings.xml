@@ -6,6 +6,7 @@
         <item>CAM</item>
         <item>MAP</item>
         <item>SPAT</item>
+        <item>BSM</item>
     </string-array>
 
     <string-array name="denmProperties">
@@ -132,7 +133,89 @@
         <item>4.IntersectionState Revision</item>
     </string-array>
 
+    <string-array name="bsmProperties">
+        <item>Longitude</item>
+        <item>Latitude</item>
+        <item>Id</item>
+        <item>Elevation</item>
+        <item>AbsStatus</item>
+        <item>AuxBrakeStatus</item>
+        <item>BrakeBoostStatus</item>
+        <item>isABSActivated</item>
+        <item>isAirBagDeployment</item>
+        <item>isDisabledVehicle</item>
+        <item>isEmergencyResponse</item>
+        <item>isFlatTire</item>
+        <item>isHardBraking</item>
+        <item>isHazardLights</item>
+        <item>isHazardousMaterials</item>
+        <item>isLightsChanged</item>
+        <item>isStabilityControlActivated</item>
+        <item>isStopLineViolation</item>
+        <item>isDisabledVehicle</item>
+        <item>isEmergencyResponse</item>
+        <item>isTractionControlLoss</item>
+        <item>isWipersChanged</item>
+        <item>isAutomaticLightControlOnOn</item>
+        <item>isDaytimeRunningLightsOn</item>
+        <item>isFogLightOn</item>
+        <item>isHighBeamHeadlightsOn</item>
+        <item>isLeftTurnSignalOn</item>
+        <item>isLowBeamHeadlightsOn</item>
+        <item>isParkingLightsOn</item>
+        <item>isReverseLightOn</item>
+        <item>isRightTurnSignalOn</item>
+        <item>PositionVectorDateTime</item>
+        <item>PositionVectorHeading</item>
+        <item>PositionVectorLatitude</item>
+        <item>PositionVectorLongitude</item>
+        <item>PositionVectorSpeed</item>
+        <item>Heading</item>
+        <item>LateralAcceleration</item>
+        <item>LongitudinalAcceleration</item>
+        <item>LightBarInUse</item>
+        <item>MsgCount</item>
+        <item>isaPDOPofUnder5</item>
+        <item>isBaseStationType</item>
+        <item>isHealthy</item>
+        <item>isInViewOfUnder5</item>
+        <item>isLocalCorrectionsPresent</item>
+        <item>isMonitored</item>
+        <item>isNetworkCorrectionsPresent</item>
+        <item>isUnavailable</item>
+        <item>PathPredictionConfidence</item>
+        <item>PathPredictionRadiusOfCurvature</item>
+        <item>SecMark</item>
+        <item>SemiMajorAccuracy</item>
+        <item>SemiMinorAccuracy</item>
+        <item>SemiMajorOrientation</item>
+        <item>Speed</item>
+        <item>YawRate</item>
+        <item>WheelBrakeisLeftFront</item>
+        <item>WheelBrakeisRigthFront</item>
+        <item>WheelBrakeisLeftRear</item>
+        <item>WheelBrakeisRightRear</item>
+        <item>WheelBrakeUnavailable</item>
+        <item>VerticalAcceleration</item>
+        <item>VehicleType</item>
+        <item>VehicleLength</item>
+        <item>VehicheWidth</item>
+        <item>TransmissionState</item>
+        <item>TractionControlStatus</item>
+        <item>ThrottlePosition</item>
+        <item>SteeringWheelAngle</item>
+        <item>StabilityControlStatus</item>
+    </string-array>
+
+    <string-array name="messageSets">
+        <item>C</item>
+        <item>D</item>
+        <item>E</item>
+    </string-array>
+
     <string name="graph_menu_item">Graphs</string>
     <string name="list_menu_item">Packet List</string>
     <string name="livemap_menu_item">Live Map</string>
+    <string name="details_menu_item">Packet Details</string>
+    <string name="title_activity_device_handle">DeviceHandle</string>
 </resources>

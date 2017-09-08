@@ -61,7 +61,7 @@ public class MessageListFragment extends ListFragment{
     }
 
     public void sendData(PacketAncestor data) {
-        communicator.updateDataDetails(data);
+        communicator.showPacketDetails(data);
     }
 
     //Send the clicked packet infos to the DetailsFragment

@@ -24,6 +24,7 @@ import com.commsignia.v2x.client.model.LdmObjectType;
 import java.util.HashMap;
 import java.util.concurrent.TimeoutException;
 
+import patrik.onlab_start.Model.DataCommunicator;
 import patrik.onlab_start.Model.NotificationType;
 import patrik.onlab_start.Model.PacketAncestor;
 import patrik.onlab_start.Model.PacketCommunicator;
@@ -31,7 +32,7 @@ import patrik.onlab_start.NavigationBoard.MenuItemId;
 import patrik.onlab_start.NavigationBoard.fragments.GraphFragment;
 import patrik.onlab_start.NavigationBoard.fragments.MapFragment;
 
-public class BoardActivity extends AppCompatActivity implements PacketCommunicator {
+public class BoardActivity extends AppCompatActivity implements PacketCommunicator,DataCommunicator {
     private NavigationView navigationView;
 
     private Fragment[] fragments;
@@ -42,15 +43,20 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
 
     private MapFragment mapFragment;
 
+    private MessageDetailsFragment messageDetailsFragment;
+
     private int selectedMenuItemIndex = 0;
 
+    private int counterM = 0;
 
     // ITS application properties
     public static ITSApplication itsApplication = null;
-    public static final int DEFAULT_ITS_AID = 55;
-    public static final String DEFAULT_TARGET_HOST = "192.168.0.96";
-    public static final int DEFAULT_TARGET_PORT = 7942;
-    public static final MessageSet DEFAULT_MESSAGE_SET = MessageSet.D;
+    public static int DEFAULT_ITS_AID = 85;
+    public static String DEFAULT_TARGET_HOST = "192.168.0.96";
+    public static int DEFAULT_TARGET_PORT = 7942;
+    public static MessageSet DEFAULT_MESSAGE_SET = MessageSet.D;
+
+    private Counter counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +72,36 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
         if (mapFragment == null)
             mapFragment = new MapFragment();
 
+        if (messageDetailsFragment == null)
+            messageDetailsFragment = new MessageDetailsFragment();
+
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         Intent intent = getIntent();
         HashMap<String,String > selectedPropertiesValues = (HashMap<String, String>) intent.getSerializableExtra("selectedValues");
+        DEFAULT_ITS_AID = Integer.valueOf(intent.getStringExtra("applicationID"));
+        DEFAULT_TARGET_HOST = intent.getStringExtra("deviceAddress");
+        DEFAULT_TARGET_PORT = Integer.valueOf(intent.getStringExtra("portNumber"));
+        String messageSet = intent.getStringExtra("messageSet");
+        switch (messageSet) {
+            case "C":
+                DEFAULT_MESSAGE_SET = MessageSet.C;
+                break;
+            case "D":
+                DEFAULT_MESSAGE_SET = MessageSet.D;
+                break;
+            case "E":
+                DEFAULT_MESSAGE_SET = MessageSet.E;
+                break;
+            default:
+                DEFAULT_MESSAGE_SET = MessageSet.D;
+                break;
+        }
+
+        counter = new Counter();
+        CounterTimer timer = new CounterTimer(counter,this,0,3000);
+        timer.start();
 
         //Start the ITS Application
         try {
@@ -101,7 +132,9 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
                                     PacketAncestor packet =
                                             new PacketAncestor(facilityNotification, NotificationType.FAC_NOTIFICATION);
                                     listFragment.adapter.addPacket(packet);
-//                                    messageCounter++;
+//                                    counterM++;
+                                    counter.incrementMessageCounter();
+                                    counter.incrementSnrSum(facilityNotification.getRssi());
 //                                    snrSum += facilityNotification.getRssi();
                                     Log.d("SNR : ",String.valueOf(facilityNotification.getRssi()));
                                 }
@@ -123,7 +156,9 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
                                     if(!mapFragment.isNull()) {
                                         mapFragment.setMarktoCarPosition(ldmObject.getLatitude(),ldmObject.getLongitude());
                                     }
-//                                    messageCounter++;
+//                                    counterM++;
+                                    counter.incrementMessageCounter();
+                                    counter.incrementSnrSum(ldmObject.getRssiDbm());
 //                                    snrSum += ldmObject.getRssiDbm();
                                 }
                                 Log.d("Ldm received", ldmObject.getNotificationType().toString());
@@ -143,6 +178,21 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
             }
 
 
+//            //Timer for measure the incoming packets
+//                Timer timer = new Timer();
+//                timer.scheduleAtFixedRate(new TimerTask() {
+//                    public void run() {
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                sendDatasForShowing(counter,0);
+//                                counter = 0;
+//                            }
+//                        });
+//                    }
+//                }, 0, 5000);
+
+
         } catch (InterruptedException | ClientException |TimeoutException e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(),"ERROR", Toast.LENGTH_LONG).show();
@@ -157,22 +207,20 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
         setupStartingFragment(savedInstanceState);
 
         listFragment.startPacketCapturing(selectedPropertiesValues);
-
-        System.out.print("");
-
-
     }
 
     public void setUpNavigation() {
         fragments = new Fragment[]{
                 listFragment,
                 graphFragment,
-                mapFragment
+                mapFragment,
+//                messageDetailsFragment
         };
 
         addNavigationMenuItem(0,fragments[0],MenuItemId.PACKETS_ITEM);
         addNavigationMenuItem(1,fragments[1],MenuItemId.GRAPHS_ITEM);
         addNavigationMenuItem(2,fragments[2],MenuItemId.LIVEMAP_ITEM);
+        //addNavigationMenuItem(3,fragments[3],MenuItemId.DETAILS_ITEM);
 
         navigationView.getMenu().setGroupCheckable(1, true, true);
     }
@@ -189,14 +237,17 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
             case LIVEMAP_ITEM:
                id=R.string.livemap_menu_item;
                 break;
+            case DETAILS_ITEM:
+                id=R.string.details_menu_item;
+                break;
         }
-        navigationView.getMenu()
-                .add(1, index, Menu.NONE, id)
-                .setCheckable(true)
-                .setOnMenuItemClickListener(item -> {
-                    onNavigationItemSelected(item, fragment);
-                    return true;
-                });
+            navigationView.getMenu()
+                    .add(1, index, Menu.NONE, id)
+                    .setCheckable(true)
+                    .setOnMenuItemClickListener(item -> {
+                        onNavigationItemSelected(item, fragment);
+                        return true;
+                    });
     }
 
     private void onNavigationItemSelected(MenuItem item, Fragment fragment) {
@@ -212,7 +263,10 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
     }
 
     @Override
-    public void updateDataDetails(PacketAncestor data) {
+    public void showPacketDetails(PacketAncestor data) {
+//            messageDetailsFragment.changeData(data);
+        //messageDetailsFragment.showDialog();
+        showEditDialog(data);
 
     }
 
@@ -223,5 +277,18 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
     private void selectMenuItem(int index) {
         MenuItem item = navigationView.getMenu().getItem(index);
         onNavigationItemSelected(item, fragments[index]);
+    }
+
+    @Override
+    public void sendDatasForShowing(double count, double avarageSNR) {
+        if(!graphFragment.isNull()) {
+            graphFragment.updateDataFromActivity(count, avarageSNR);
+        }
+    }
+
+    private void showEditDialog(PacketAncestor data) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        MessageDetailsFragment editNameDialogFragment = MessageDetailsFragment.newInstance("Some Title",data);
+        editNameDialogFragment.show(fragmentManager,"tag");
     }
 }

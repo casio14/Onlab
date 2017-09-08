@@ -158,6 +158,22 @@ public class MessageAdapter extends ArrayAdapter {
                             new LdmNotificationFieldValue(selectedValues.get("SPAT_3"),lo).getSPATValue()
                     );
                 }
+
+                if (lo.getObjectType().toString().equals("BSM")) {
+                    holder.tvType.setText(lo.getObjectType().toString());
+                    holder.tvParamType1.setText(selectedValues.get("BSM_1"));
+                    holder.tvParamType2.setText(selectedValues.get("BSM_2"));
+                    holder.tvParamType3.setText(selectedValues.get("BSM_3"));
+                    holder.tvParam1.setText(
+                            new LdmNotificationFieldValue(selectedValues.get("BSM_1"),lo).getBSMValue()
+                    );
+                    holder.tvParam2.setText(
+                            new LdmNotificationFieldValue(selectedValues.get("BSM_2"),lo).getBSMValue()
+                    );
+                    holder.tvParam3.setText(
+                            new LdmNotificationFieldValue(selectedValues.get("BSM_3"),lo).getBSMValue()
+                    );
+                }
             }
 
         }
