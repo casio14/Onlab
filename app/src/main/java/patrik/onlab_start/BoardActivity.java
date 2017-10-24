@@ -188,7 +188,6 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
 
         } catch (InterruptedException | ClientException | TimeoutException e) {
             e.printStackTrace();
-            //Toast.makeText(getApplicationContext(),"ERROR", Toast.LENGTH_LONG).show();
             Snackbar.make(getCurrentFocus(), "Error", Snackbar.LENGTH_LONG).show();
             finish();
             return;
@@ -201,20 +200,11 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
 
         setUpNavigation();
 
-        //setupStartingFragment(savedInstanceState);
-
-
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        fragmentManager.beginTransaction()
-//                .hide(mapFragment)
-//                .hide(graphFragment)
-//                .commit();
         mapFragment.getView().setVisibility(View.INVISIBLE);
         graphFragment.getView().setVisibility(View.INVISIBLE);
 
 
         listFragment.startPacketCapturing(selectedPropertiesValues);
-
     }
 
     @Override
@@ -361,12 +351,6 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
 
         setTitle(item.getTitle());
 
-
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        fragmentManager.beginTransaction()
-//                .hide(lastSelectedFragment)
-//                .show(fragment)
-//                .commit();
         lastSelectedFragment.getView().setVisibility(View.INVISIBLE);
         fragment.getView().setVisibility(View.VISIBLE);
 
@@ -376,15 +360,6 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
     @Override
     public void showPacketDetails(PacketAncestor data) {
         showEditDialog(data);
-    }
-
-//    public void setupStartingFragment() {
-//        selectMenuItem(0);
-//    }
-
-    private void selectMenuItem(int index) {
-        MenuItem item = navigationView.getMenu().getItem(index);
-        onNavigationItemSelected(item, fragments[index]);
     }
 
     @Override

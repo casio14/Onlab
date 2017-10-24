@@ -40,12 +40,10 @@ import patrik.onlab_start.Model.PacketAncestor;
 import patrik.onlab_start.Model.PacketCommunicator;
 import patrik.onlab_start.NavigationBoard.fragments.GraphFragment;
 
-public class MainActivity extends AppCompatActivity implements PacketCommunicator, DataCommunicator {
+public class MainActivity extends AppCompatActivity {
 
     //Fragments
-    MessageDetailsFragment messageDetailsFragment;
     GraphFragment graphFragment;
-    MessageListFragment listFragment;
 
     GraphFragment loadGraphFragment;
 
@@ -114,18 +112,10 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         //Set approtiate listeners for the spinners
         spinnerListeners();
 
-/*
-        if (listFragment == null)
-            listFragment = (MessageListFragment) getSupportFragmentManager().findFragmentById(R.id.messageFragment);*/
-
         //Set approtiate listeners for the buttons
         initializeButtonListeners();
 
         AndroidThreeTen.init(this);
-
-
-
-
     }
 
     @Override
@@ -151,19 +141,6 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         }
         return true;
     }
-
-    //Show a message info in the MessageDetailsFragment
-    public void showPacketDetails(PacketAncestor data) {
-/*
-        //Set the appropriate fragment
-        if (messageDetailsFragment == null) {
-            messageDetailsFragment = (MessageDetailsFragment) getFragmentManager().findFragmentById(R.id.detailsFragment);
-        }
-
-        //Call the MessageDetailsFragment appropriate method to update values
-        messageDetailsFragment.changeData(data);*/
-    }
-
 
     public void showLoadAlertDialog() {
 
@@ -230,15 +207,6 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
 
         alertbox.setView(view);
         alertbox.show();
-    }
-
-    //Send incoming packet infos to the GraphFragment
-    @Override
-    public void sendDatasForShowing(double count, double avarageSNR) {
-        /*if (graphFragment == null) {
-            graphFragment = (GraphFragment) getFragmentManager().findFragmentById(R.id.graphFragment);
-        }
-        graphFragment.updateDataFromActivity(count,avarageSNR);*/
     }
 
     public void spinnerListeners() {
@@ -476,11 +444,6 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         saveButton.setVisibility(View.INVISIBLE);
         restartButton.setVisibility(View.INVISIBLE);
 
-       /* //Set the messageFragment invisible
-        FrameLayout messageFrame = (FrameLayout) findViewById(R.id.messageFrame);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 0, 0);
-        messageFrame.setLayoutParams(params);*/
-
         //Set the spinnerLayout larger
         final LinearLayout spinnerLayout = (LinearLayout) findViewById(R.id.spinnerLayout);
         LinearLayout.LayoutParams paramsSpinnerLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 0, 9);
@@ -498,84 +461,6 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
 
                 updateSelectedPropertiesValuesHashMap();
 
-
-//                //Start the ITS Application
-//                try {
-//                    itsApplication = new ITSApplication(DEFAULT_ITS_AID, DEFAULT_TARGET_HOST, DEFAULT_TARGET_PORT, DEFAULT_MESSAGE_SET);
-//
-//                    itsApplication.connect(10000);
-//
-//                    itsApplication.commands().registerBlocking();
-//
-//                    itsApplication.commands().setDeviceTimeBlocking(System.currentTimeMillis() / 1000L);
-//
-//                    String id = itsApplication.getHost(); // Get host
-//                    Log.d("ITS station ID:", String.valueOf(id));
-//
-//
-//                    final ITSApplication finalItsApplication = itsApplication;
-//
-//                    //Add evenet listeners
-//                    try {
-//                        finalItsApplication.addEventListener(new ITSEventAdapter() {    // Facility subscribe
-//                            @Override
-//                            public void onFacilityNotificationReceived(final FacilityNotification facilityNotification) {
-//                                //that we can update the UI from other thread
-//                                runOnUiThread(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        synchronized (facilityNotification) {
-//                                            PacketAncestor packet =
-//                                                    new PacketAncestor(facilityNotification, NotificationType.FAC_NOTIFICATION);
-//                                            listFragment.adapter.addPacket(packet);
-//                                            messageCounter++;
-//                                            snrSum += facilityNotification.getRssi();
-//                                            Log.d("SNR : ",String.valueOf(facilityNotification.getRssi()));
-//                                        }
-//                                        Log.d("Facility not. received", facilityNotification.getType().toString());
-//                                    }
-//                                });
-//                            }
-//
-//
-//
-//                            @Override
-//                            public void onLdmNotificationReceived(final LdmObject ldmObject) {
-//                                runOnUiThread(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        synchronized (ldmObject) {
-//                                            PacketAncestor packet = new PacketAncestor(ldmObject, NotificationType.LDM_NOTIFICATION);
-//                                            listFragment.adapter.addPacket(packet);
-//                                            messageCounter++;
-//                                            snrSum += ldmObject.getRssiDbm();
-//                                        }
-//                                        Log.d("Ldm received", ldmObject.getNotificationType().toString());
-//                                    }
-//                                });
-//                            }
-//                        });
-//
-//
-//                        finalItsApplication.commands().facilitySubscribeBlocking(new FacilitySubscriptionMessages().setCamIncluded(true).setDenmIncluded(true));
-//                        finalItsApplication.commands().ldmSubscribeBlocking(
-//                                new LdmFilter().setObjectTypeFilter(LdmObjectType.MAP, LdmObjectType.SPAT)
-//                        );
-//
-//                    } catch (Exception e) {
-//                        Log.d("ClientException: ", "Cannot execute API commands");
-//                    }
-//
-//
-//                } catch (InterruptedException | ClientException |TimeoutException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(getApplicationContext(),"ERROR",Toast.LENGTH_LONG).show();
-//                    return;
-//                } finally {
-//                    if (itsApplication != null)
-//                        Log.d("Request", "was sent.");
-//                }
-
                 Intent intent = new Intent(getApplicationContext(),BoardActivity.class);
                 intent.putExtra("selectedValues",selectedPropertiesValues);
                 intent.putExtra("applicationID",applicationID.getText().toString());
@@ -583,131 +468,6 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                 intent.putExtra("portNumber",portNumber.getText().toString());
                 intent.putExtra("messageSet",messageSetsSpinner.getSelectedItem().toString());
                 startActivity(intent);
-/*
-                //Set invisible the spinnerLayout
-                final LinearLayout spinnerLayout = (LinearLayout) findViewById(R.id.spinnerLayout);
-                LinearLayout.LayoutParams paramsSpinnerLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 0, 0);
-                spinnerLayout.setLayoutParams(paramsSpinnerLayout);
-                spinnerLayout.setVisibility(View.INVISIBLE);
-
-                //Set larger the messageFragment to fill the spinnerLayout field
-                FrameLayout messageFrame = (FrameLayout) findViewById(R.id.messageFrame);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 0, 9);
-                messageFrame.setLayoutParams(params);
-
-                updateSelectedPropertiesValuesHashMap();
-                //Pass the adjested spinner values
-                listFragment.startPacketCapturing(selectedPropertiesValues);
-
-
-                if (graphFragment == null) {
-                    graphFragment = (GraphFragment) getFragmentManager().findFragmentById(R.id.graphFragment);
-                }
-
-                graphFragment.onResume();
-
-
-                //Timer for measure the incoming packets
-                if (!measuringInterval_eT.getText().toString().equals("")) {
-                    int interval = Integer.parseInt(measuringInterval_eT.getText().toString());
-                    timer = new Timer();
-                    timer.scheduleAtFixedRate(new TimerTask() {
-                        public void run() {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Log.d("ÜZENETEK SZÁMA", ":::::" + messageCounter);
-                                    avarageSNR = snrSum / messageCounter;
-                                    sendDatasForShowing(messageCounter,avarageSNR);
-                                    messageCounter = 0;
-                                    snrSum=0;
-                                    avarageSNR=0;
-                                }
-                            });
-                        }
-                    }, 0, interval * 1000);
-
-                } else {
-                    Toast.makeText(MainActivity.this, "Give an interval number!", Toast.LENGTH_SHORT).show();
-                }
-
-
-
-
-                startButton.setVisibility(View.INVISIBLE);
-                saveButton.setVisibility(View.INVISIBLE);
-                stopButton.setVisibility(View.VISIBLE);
-                restartButton.setVisibility(View.VISIBLE);*/
-            }
-        });
-
-        //Stop the graph thread
-        stopButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*if (graphFragment == null) {
-                    graphFragment = (GraphFragment) getFragmentManager().findFragmentById(R.id.graphFragment);
-                }
-                graphFragment.onPause();*/
-
-                snrSum=0;
-                avarageSNR=0;
-                messageCounter=0;
-
-                if(timer!=null)
-                    timer.cancel();
-
-                if(itsApplication!=null)
-                    itsApplication.shutdown();
-
-
-                stopButton.setVisibility(View.INVISIBLE);
-                saveButton.setVisibility(View.VISIBLE);
-            }
-        });
-
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                showSaveAlertDialog();
-            }
-        });
-
-        restartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*if (graphFragment == null) {
-                    graphFragment = (GraphFragment) getFragmentManager().findFragmentById(R.id.graphFragment);
-                }*/
-                graphFragment.onPause();
-                graphFragment.clearDatas();
-/*
-                if(messageDetailsFragment ==null)
-                    messageDetailsFragment= (MessageDetailsFragment) getFragmentManager().findFragmentById(R.id.detailsFragment);
-                messageDetailsFragment.clearDetails();
-*/
-                //Set the spinnerLayout to the original size
-                final LinearLayout spinnerLayout = (LinearLayout) findViewById(R.id.spinnerLayout);
-                LinearLayout.LayoutParams paramsSpinnerLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 0, 9);
-                spinnerLayout.setLayoutParams(paramsSpinnerLayout);
-                spinnerLayout.setVisibility(View.VISIBLE);
-
-                //Set the messageFrame to the original size
-                FrameLayout messageFrame = (FrameLayout) findViewById(R.id.messageFrame);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 0, 0);
-                messageFrame.setLayoutParams(params );
-
-                if(timer!=null)
-                    timer.cancel();
-
-                if(itsApplication!=null)
-                    itsApplication.shutdown();
-
-
-                stopButton.setVisibility(View.INVISIBLE);
-                saveButton.setVisibility(View.INVISIBLE);
-                restartButton.setVisibility(View.INVISIBLE);
-                startButton.setVisibility(View.VISIBLE);
             }
         });
 
@@ -723,20 +483,20 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
     public void initializeSelectedPropertiesHashMap() {
         selectedPropertiesPositions = new HashMap<>();
         selectedPropertiesPositions.put("DENM_1",0);
-        selectedPropertiesPositions.put("DENM_2",0);
-        selectedPropertiesPositions.put("DENM_3",0);
+        selectedPropertiesPositions.put("DENM_2",1);
+        selectedPropertiesPositions.put("DENM_3",2);
         selectedPropertiesPositions.put("CAM_1",0);
-        selectedPropertiesPositions.put("CAM_2",0);
-        selectedPropertiesPositions.put("CAM_3",0);
+        selectedPropertiesPositions.put("CAM_2",1);
+        selectedPropertiesPositions.put("CAM_3",2);
         selectedPropertiesPositions.put("MAP_1",0);
-        selectedPropertiesPositions.put("MAP_2",0);
-        selectedPropertiesPositions.put("MAP_3",0);
+        selectedPropertiesPositions.put("MAP_2",1);
+        selectedPropertiesPositions.put("MAP_3",2);
         selectedPropertiesPositions.put("SPAT_1",0);
-        selectedPropertiesPositions.put("SPAT_2",0);
-        selectedPropertiesPositions.put("SPAT_3",0);
+        selectedPropertiesPositions.put("SPAT_2",1);
+        selectedPropertiesPositions.put("SPAT_3",2);
         selectedPropertiesPositions.put("BSM_1",0);
-        selectedPropertiesPositions.put("BSM_2",0);
-        selectedPropertiesPositions.put("BSM_3",0);
+        selectedPropertiesPositions.put("BSM_2",1);
+        selectedPropertiesPositions.put("BSM_3",2);
 
         selectedPropertiesValues = new HashMap<>();
         selectedPropertiesValues.put("DENM_1","");

@@ -56,8 +56,6 @@ public class MessageListFragment extends ListFragment{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        //getListView().setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
     }
 
     public void sendData(PacketAncestor data) {
@@ -67,7 +65,6 @@ public class MessageListFragment extends ListFragment{
     //Send the clicked packet infos to the DetailsFragment
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        //super.onListItemClick(l, v, position, id);
 
         if(selectedItemPosition>-1) {
             if(selectedItemPosition%2==1)

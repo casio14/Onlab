@@ -41,16 +41,11 @@ public class CarListAdapter extends ArrayAdapter {
 
     Context mContext;
 
-    //Adjusted spinner values
-    Map<String, String> selectedValues;
-
     //Constructor
     public CarListAdapter(Context context, int resource, List<String> input_data) {
         super(context, resource, input_data);
         this.mContext = context;
         this.list = input_data;
-
-        this.selectedValues = selectedValues;
     }
 
     @Override

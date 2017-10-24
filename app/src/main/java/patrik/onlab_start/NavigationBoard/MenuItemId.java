@@ -5,5 +5,5 @@ package patrik.onlab_start.NavigationBoard;
  */
 
 public enum MenuItemId {
-    PACKETS_ITEM, GRAPHS_ITEM, LIVEMAP_ITEM, DETAILS_ITEM
+    PACKETS_ITEM, GRAPHS_ITEM, LIVEMAP_ITEM
 }
