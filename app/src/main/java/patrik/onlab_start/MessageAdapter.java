@@ -229,12 +229,23 @@ public class MessageAdapter extends ArrayAdapter {
                     "2.IntersectionState TimeStamp,2.IntersectionState ID,2.IntersectionState LaneCount,2.IntersectionState Revision" +
                     "3.IntersectionState TimeStamp,3.IntersectionState ID,3.IntersectionState LaneCount,3.IntersectionState Revision" +
                     "4.IntersectionState TimeStamp,4.IntersectionState ID,4.IntersectionState LaneCount,4.IntersectionState Revision" + "\n";
-            ;
+
+            String firstLineBSM = "Longitude,Latitude,Id,Elevation,AbsStatus,AuxBrakeStatus,BrakeBoostStatus,isABSActivated,isAirBagDeployment,isDisabledVehicle," +
+                    "isEmergencyResponse,isFlatTire,isHardBraking,isHazardLights,isHazardousMaterials,isLightsChanged,isStabilityControlActivated," +
+                    "isStopLineViolation,isDisabledVehicle,isEmergencyResponse,isTractionControlLoss,isWipersChanged,isAutomaticLightControlOnOn," +
+                    "isDaytimeRunningLightsOn,isFogLightOn,isHighBeamHeadlightsOn,isLeftTurnSignalOn,isLowBeamHeadlightsOn,isParkingLightsOn,isReverseLightOn," +
+                    "isRightTurnSignalOn,PositionVectorDateTime,PositionVectorHeading,PositionVectorLatitude,PositionVectorLongitude,PositionVectorSpeed," +
+                    "Heading,LateralAcceleration,LongitudinalAcceleration,LightBarInUse,MsgCount,isaPDOPofUnder5,isBaseStationType,isHealthy,isInViewOfUnder5," +
+                    "isLocalCorrectionsPresent,isMonitored,isNetworkCorrectionsPresent,isUnavailable,PathPredictionConfidence,PathPredictionRadiusOfCurvature," +
+                    "SecMark,SemiMajorAccuracy,SemiMinorAccuracy,SemiMajorOrientation,Speed,YawRate,WheelBrakeisLeftFront,WheelBrakeisRigthFront,WheelBrakeisLeftRear," +
+                    "WheelBrakeisRightRear,WheelBrakeUnavailable,VerticalAcceleration,VehicleType,VehicleLength,VehicheWidth,TransmissionState,TractionControlStatus,ThrottlePosition," +
+                    "SteeringWheelAngle,StabilityControlStatus" + "\n";
 
             fw.write(firstLineDENM);
             fw.write(firstLineCAM);
             fw.write(firstLineMAP);
             fw.write(firstLineSPAT);
+            fw.write(firstLineBSM);
 
             for (PacketAncestor p :
                     list) {
@@ -267,6 +278,11 @@ public class MessageAdapter extends ArrayAdapter {
                             String lineSPAT = fillSPATString(lo);
                             lineSPAT += "\n";
                             fw.write(lineSPAT);
+                            break;
+                        case "BSM":
+                            String lineBSM = fillBSMString(lo);
+                            lineBSM += "\n";
+                            fw.write(lineBSM);
                             break;
                     }
                 }
@@ -873,6 +889,359 @@ public class MessageAdapter extends ArrayAdapter {
             line += "null";
 
         return line;
+    }
+
+    private String fillBSMString(LdmObject lo) {
+
+                String line = "BSM,";
+
+                if(lo.getBsmObject() != null)
+                    line += String.valueOf(lo.getBsmObject().getLongitude()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null)
+                    line += String.valueOf(lo.getBsmObject().getLatitude()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null)
+                    line += String.valueOf(lo.getBsmObject().getId()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getElevation(LengthUnit.M) != null)
+                    line += lo.getBsmObject().getElevation(LengthUnit.M).toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getAbsStatus() != null)
+                    line += lo.getBsmObject().getAbsStatus().toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getAuxBrakeStatus() != null)
+                    line += lo.getBsmObject().getAuxBrakeStatus().toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getBrakeBoostStatus() != null)
+                    line += lo.getBsmObject().getBrakeBoostStatus().toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getEvents() != null)
+                    line += String.valueOf(lo.getBsmObject().getEvents().isABSActivated()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getEvents() != null)
+                    line += String.valueOf(lo.getBsmObject().getEvents().isAirBagDeployment()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getEvents() != null)
+                    line += String.valueOf(lo.getBsmObject().getEvents().isDisabledVehicle()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getEvents() != null)
+                    line += String.valueOf(lo.getBsmObject().getEvents().isEmergencyResponse()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getEvents() != null)
+                    line += String.valueOf(lo.getBsmObject().getEvents().isFlatTire()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getEvents() != null)
+                    line += String.valueOf(lo.getBsmObject().getEvents().isHardBraking()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getEvents() != null)
+                    line += String.valueOf(lo.getBsmObject().getEvents().isHazardLights()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getEvents() != null)
+                    line += String.valueOf(lo.getBsmObject().getEvents().isHazardousMaterials()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getEvents() != null)
+                    line += String.valueOf(lo.getBsmObject().getEvents().isLightsChanged()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getEvents() != null)
+                    line += String.valueOf(lo.getBsmObject().getEvents().isStabilityControlActivated()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getEvents() != null)
+                    line += String.valueOf(lo.getBsmObject().getEvents().isStopLineViolation()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getEvents() != null)
+                    line += String.valueOf(lo.getBsmObject().getEvents().isTractionControlLoss()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getEvents() != null)
+                    line += String.valueOf(lo.getBsmObject().getEvents().isWipersChanged()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getExteriorLights() != null)
+                    line += String.valueOf(lo.getBsmObject().getExteriorLights().isAutomaticLightControlOnOn()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getExteriorLights() != null)
+                    line += String.valueOf(lo.getBsmObject().getExteriorLights().isDaytimeRunningLightsOn()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getExteriorLights() != null)
+                    return String.valueOf(lo.getBsmObject().getExteriorLights().isFogLightOn()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getExteriorLights() != null)
+                    return String.valueOf(lo.getBsmObject().getExteriorLights().isHighBeamHeadlightsOn()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getExteriorLights() != null)
+                    line += String.valueOf(lo.getBsmObject().getExteriorLights().isLeftTurnSignalOn()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getExteriorLights() != null)
+                    line += String.valueOf(lo.getBsmObject().getExteriorLights().isLowBeamHeadlightsOn()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getExteriorLights() != null)
+                    line += String.valueOf(lo.getBsmObject().getExteriorLights().isParkingLightsOn()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getExteriorLights() != null)
+                    line += String.valueOf(lo.getBsmObject().getExteriorLights().isReverseLightOn()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getExteriorLights() != null)
+                    line += String.valueOf(lo.getBsmObject().getExteriorLights().isRightTurnSignalOn()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getFullPositionVector() != null && lo.getBsmObject().getFullPositionVector().getDateTime() != null)
+                    line += lo.getBsmObject().getFullPositionVector().getDateTime().toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getFullPositionVector() != null && lo.getBsmObject().getFullPositionVector().getHeading() != null)
+                    line += lo.getBsmObject().getFullPositionVector().getHeading().toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getFullPositionVector() != null)
+                    line += String.valueOf(lo.getBsmObject().getFullPositionVector().getLatitude()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getFullPositionVector() != null)
+                    line += String.valueOf(lo.getBsmObject().getFullPositionVector().getLongitude()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getFullPositionVector() != null && lo.getBsmObject().getFullPositionVector().getSpeed() != null)
+                    line += lo.getBsmObject().getFullPositionVector().getSpeed().toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null)
+                    line += String.valueOf(lo.getBsmObject().getHeading(DegreeUnit.DEG_1_5_POSNEG)) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getLateralAcceleration(AccelerationUnit.MperS2) != null)
+                    line += lo.getBsmObject().getLateralAcceleration(AccelerationUnit.MperS2).toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getLongitudinalAcceleration(AccelerationUnit.MperS2) != null)
+                    line += lo.getBsmObject().getLongitudinalAcceleration(AccelerationUnit.MperS2).toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getLightBarInUse() != null)
+                    line += lo.getBsmObject().getLightBarInUse().toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null)
+                    line += String.valueOf(lo.getBsmObject().getMsgCount()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getPathHistory() != null && lo.getBsmObject().getPathHistory().getCurrGnssStatus() != null)
+                    line += String.valueOf(lo.getBsmObject().getPathHistory().getCurrGnssStatus().isaPDOPofUnder5()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getPathHistory() != null && lo.getBsmObject().getPathHistory().getCurrGnssStatus() != null)
+                    line += String .valueOf(lo.getBsmObject().getPathHistory().getCurrGnssStatus().isBaseStationType()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getPathHistory() != null && lo.getBsmObject().getPathHistory().getCurrGnssStatus() != null)
+                    line += String.valueOf(lo.getBsmObject().getPathHistory().getCurrGnssStatus().isHealthy()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getPathHistory() != null && lo.getBsmObject().getPathHistory().getCurrGnssStatus() != null)
+                    line += String.valueOf(lo.getBsmObject().getPathHistory().getCurrGnssStatus().isInViewOfUnder5()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getPathHistory() != null && lo.getBsmObject().getPathHistory().getCurrGnssStatus() != null)
+                    line += String.valueOf(lo.getBsmObject().getPathHistory().getCurrGnssStatus().isLocalCorrectionsPresent()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getPathHistory() != null && lo.getBsmObject().getPathHistory().getCurrGnssStatus() != null)
+                    line += String.valueOf(lo.getBsmObject().getPathHistory().getCurrGnssStatus().isMonitored()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getPathHistory() != null && lo.getBsmObject().getPathHistory().getCurrGnssStatus() != null)
+                    line += String.valueOf(lo.getBsmObject().getPathHistory().getCurrGnssStatus().isNetworkCorrectionsPresent()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getPathHistory() != null && lo.getBsmObject().getPathHistory().getCurrGnssStatus() != null)
+                    line += String.valueOf(lo.getBsmObject().getPathHistory().getCurrGnssStatus().isUnavailable()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getPathPrediction() != null)
+                    line += String.valueOf(lo.getBsmObject().getPathPrediction().getConfidence()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getPathPrediction() != null)
+                    line += String.valueOf(lo.getBsmObject().getPathPrediction().getRadiusOfCurvature(LengthUnit.M)) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null)
+                    line += String.valueOf(lo.getBsmObject().getSecMark(TimeUnit.DAYS)) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getSemiMajorAccuracy(LengthUnit.M) != null)
+                    line += lo.getBsmObject().getSemiMajorAccuracy(LengthUnit.M).toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getSemiMinorAccuracy(LengthUnit.M) != null)
+                    line += lo.getBsmObject().getSemiMinorAccuracy(LengthUnit.M).toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getSemiMajorOrientation(DegreeUnit.DEG_1_5_POSNEG) != null)
+                    line += lo.getBsmObject().getSemiMajorOrientation(DegreeUnit.DEG_1_5_POSNEG).toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getSpeed(SpeedUnit.KMperH) != null)
+                    line += lo.getBsmObject().getSpeed(SpeedUnit.KMperH).toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null)
+                    line += String.valueOf(lo.getBsmObject().getYawRate(DegreeUnit.DEG_1_5_POSNEG)) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getWheelBrakeStatus() != null)
+                    line += String.valueOf(lo.getBsmObject().getWheelBrakeStatus().isLeftFront()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getWheelBrakeStatus() != null)
+                    line += String.valueOf(lo.getBsmObject().getWheelBrakeStatus().isRightFront()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getWheelBrakeStatus() != null)
+                    line += String.valueOf(lo.getBsmObject().getWheelBrakeStatus().isLeftRear()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getWheelBrakeStatus() != null)
+                    line += String.valueOf(lo.getBsmObject().getWheelBrakeStatus().isRightRear()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getWheelBrakeStatus() != null)
+                    line += String.valueOf(lo.getBsmObject().getWheelBrakeStatus().isUnavailable()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null)
+                    line += String.valueOf(lo.getBsmObject().getVerticalAcceleration()) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getVehicleType() != null)
+                    line += lo.getBsmObject().getVehicleType().toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null)
+                    line += String.valueOf(lo.getBsmObject().getVehicleLength(LengthUnit.M)) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null)
+                    line += String.valueOf(lo.getBsmObject().getVehicheWidth(LengthUnit.M)) + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getTransmissionState() != null)
+                    line += lo.getBsmObject().getTransmissionState().toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getTractionControlStatus() != null)
+                    line += lo.getBsmObject().getTractionControlStatus().toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getThrottlePosition() != null)
+                    line += lo.getBsmObject().getThrottlePosition().toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getSteeringWheelAngle(DegreeUnit.DEG_1_5_POSNEG) != null)
+                    line += lo.getBsmObject().getSteeringWheelAngle(DegreeUnit.DEG_1_5_POSNEG).toString() + ",";
+                else
+                    line += "null,";
+
+                if(lo.getBsmObject() != null && lo.getBsmObject().getStabilityControlStatus() != null)
+                    line += lo.getBsmObject().getStabilityControlStatus().toString();
+                else
+                    line += "null";
+
+
+                return line;
     }
 
     //ViewHolder class

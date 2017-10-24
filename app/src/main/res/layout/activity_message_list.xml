@@ -17,8 +17,20 @@
         android:padding="3dp">
 
         <fragment
-            android:id="@+id/messageFragment"
+            android:id="@+id/messageListFragment"
             android:name="patrik.onlab_start.MessageListFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></fragment>
+
+        <fragment
+            android:id="@+id/graphFragment"
+            android:name="patrik.onlab_start.NavigationBoard.fragments.GraphFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></fragment>
+
+        <fragment
+            android:id="@+id/mapFragment"
+            android:name="patrik.onlab_start.NavigationBoard.fragments.MapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"></fragment>
 

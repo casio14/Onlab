@@ -1,10 +1,17 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="patrik.onlab_start.MainActivity">
-    <item
-        android:id="@+id/load_settings"
-        android:orderInCategory="1"
-        app:showAsAction="always"
-        android:title="Load graph data" />
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/stopItem"
+        android:icon="@drawable/stop"
+        android:title="Stop"
+        android:showAsAction="always"/>
+
+    <item android:id="@+id/restartItem"
+        android:icon="@drawable/replay"
+        android:title="Restart"
+        android:showAsAction="always"/>
+
+    <item android:id="@+id/saveItem"
+        android:icon="@drawable/saveicon"
+        android:title="Save (.csv)"
+        android:showAsAction="always"/>
 </menu>

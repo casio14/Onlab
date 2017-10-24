@@ -2,22 +2,40 @@ package patrik.onlab_start.NavigationBoard.fragments;
 
 import android.os.Bundle;
 
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ListView;
 
+import com.commsignia.v2x.client.model.FacilityNotification;
+import com.commsignia.v2x.client.model.LdmObject;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import patrik.onlab_start.CarListAdapter;
+import patrik.onlab_start.MessageAdapter;
+import patrik.onlab_start.Model.NotificationType;
+import patrik.onlab_start.Model.PacketAncestor;
 import patrik.onlab_start.R;
 
 /**
@@ -29,11 +47,68 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private MapView mapView;
     private GoogleMap map;
 
-    boolean followCar = true;
+    private Button changeViewButton;
+//
+    CarListAdapter adapter;
+    ListView carList;
+
+    String followedCar="";
+//
+    boolean followCar = false;
+
+    HashMap<Long, LatLng> bsmIDs;
+
+    private Timer clearTimer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.map_fragment, container, false);
+//
+
+
+//
+        bsmIDs = new HashMap<>();
+
+        changeViewButton = (Button) view.findViewById(R.id.followButton);
+
+        changeViewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(changeViewButton.getText().toString().equals("Follow")) {
+                    followCar=true;
+                    changeViewButton.setText("Manual");
+                }
+                else  if(changeViewButton.getText().toString().equals("Manual")) {
+                    followCar=false;
+                    changeViewButton.setText("Follow");
+                }
+            }
+        });
+
+        carList = (ListView) view.findViewById(R.id.carListView);
+
+        List<String> stringList = new ArrayList<>();
+        stringList.add("11");
+        stringList.add("12");
+
+        adapter = new CarListAdapter(getActivity(),android.R.layout.simple_list_item_1,stringList);
+        carList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                followedCar = adapter.getItem(i);
+
+                LatLng latLng;
+                latLng = bsmIDs.get(Long.valueOf(followedCar));
+
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
+
+                map.animateCamera(cameraUpdate, 1, null);
+                System.out.println("Camera update");
+            }
+        });
+        carList.setAdapter(adapter);
+
+        clearIdMapPeriodicly(5);
 
         return view;
     }
@@ -46,20 +121,82 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         System.out.print("");
     }
 
-    public void setMarktoCarPosition(long latitude, long longitude) {
-        System.out.println(latitude * 0.0000001 + "    " + longitude * 0.0000001);
-            map.clear();
+    public void setMarktoCarPosition(PacketAncestor packetAncestor) {
+
+        boolean isLdm = false;
+        boolean isFac = false;
+        LdmObject ldmObject = null;
+        FacilityNotification facilityNotification = null;
+
+        if(packetAncestor.getNotificationType() == NotificationType.FAC_NOTIFICATION) {
+                isFac=true;
+                facilityNotification = (FacilityNotification) packetAncestor.getObject();
+        }
+        else if(packetAncestor.getNotificationType() == NotificationType.LDM_NOTIFICATION) {
+            isLdm=true;
+            ldmObject = (LdmObject) packetAncestor.getObject();
+        }
+
+        if(isLdm) {
+            if (bsmIDs.get(ldmObject.getObjectID()) != null) {
+                bsmIDs.replace(ldmObject.getObjectID(), new LatLng(ldmObject.getLatitude() * 0.0000001, ldmObject.getLongitude() * 0.0000001));
+            } else {
+                bsmIDs.put(ldmObject.getObjectID(), new LatLng(ldmObject.getLatitude() * 0.0000001, ldmObject.getLongitude() * 0.0000001));
+            }
+        }
+
+        else if(isFac) {
+            if (bsmIDs.get(facilityNotification.getStationObject().getStationId()) != null) {
+                bsmIDs.replace(facilityNotification.getStationObject().getStationId(), new LatLng(facilityNotification.getLatitude() * 0.0000001, facilityNotification.getLongitude() * 0.0000001));
+            } else {
+                bsmIDs.put(facilityNotification.getStationObject().getStationId(), new LatLng(facilityNotification.getLatitude() * 0.0000001, facilityNotification.getLongitude() * 0.0000001));
+            }
+        }
+
+        //Log.d("Longitude :" ,ldmObject.getLatitude() * 0.0000001 + "    " + ldmObject.getLongitude() * 0.0000001);
+
+        adapter.clear();
+        map.clear();
+        for (Map.Entry<Long, LatLng> entry : bsmIDs.entrySet()) {
+            Long id = entry.getKey();
+            LatLng position = entry.getValue();
+
+            adapter.addCarID(id.toString());
+
+            //Log.d("BSM ID: ", id.toString());
+
+//          if(saját) {
+//                map.addMarker(new MarkerOptions()
+//                      .position(position)
+//                      .title(id.toString())
+//                      .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+//          }
             map.addMarker(new MarkerOptions()
-                    .position(new LatLng(latitude * 0.0000001, longitude * 0.0000001))
-                    .title("Hello world"));
+                    .position(position)
+                    .title(id.toString())
+                    .icon(BitmapDescriptorFactory.defaultMarker()));
+        }
 
 
         if(followCar) {
-            LatLng latLng = new LatLng(latitude * 0.0000001, longitude * 0.0000001);
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
+            LatLng latLng=null;
+            if(!followedCar.equals("")) {
+                latLng = bsmIDs.get(Long.valueOf(followedCar));
+            }
+            else {
+                if(isLdm) {
+                    latLng = new LatLng(ldmObject.getLatitude() * 0.0000001, ldmObject.getLongitude() * 0.0000001);
+                }
+                else if (isFac) {
+                    latLng = new LatLng(facilityNotification.getLatitude()* 0.0000001, facilityNotification.getLongitude() * 0.0000001);
+                }
+            }
+            if(latLng!=null) {
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
 
-            map.animateCamera(cameraUpdate, 1, null);
-            System.out.println("Camera update");
+                map.animateCamera(cameraUpdate, 1, null);
+                System.out.println("Camera update");
+            }
         }
 
 
@@ -70,9 +207,31 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return map == null ? true : false;
     }
 
+    private void clearIdMapPeriodicly(int seconds) {
+        clearTimer = new Timer();
+        clearTimer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("MAP IDS CLEARED", ":::::");
+                        bsmIDs.clear();
+                        adapter.clear();
+                        if(map!=null)
+                            map.clear();
+                    }
+                });
+            }
+            }
+         ,0, seconds*1000);
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+    }
+
+    public void stopClearing() {
+        clearTimer.cancel();
     }
 }

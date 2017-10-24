@@ -1,21 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/rounded_fragment_stlye"
+    android:orientation="vertical"
     android:padding="10dp"
     android:weightSum="10">
 
     <Spinner
-        android:layout_height="0dp"
+        android:id="@+id/dataTypeSpinner"
         android:layout_width="match_parent"
-        android:layout_weight="1">
-    </Spinner>
+        android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/rounded_spinner_style"></Spinner>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Auto Scroll"/>
+
+        <CheckBox
+            android:id="@+id/cbAutoScroll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/buttonSaveDatas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:padding="10dp"
+            android:text="SAVE DATAS"
+            android:background="@drawable/rounded_spinner_style"/>
+    </LinearLayout>
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9"/>
+        android:layout_weight="8" />
 
 </LinearLayout>

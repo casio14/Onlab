@@ -39,6 +39,10 @@ public class CounterTimer {
         timer.scheduleAtFixedRate(counterTimerTask,delay,period);
     }
 
+    public void stop() {
+        timer.cancel();
+    }
+
 
     private class CounterTimerTask extends TimerTask {
 
@@ -47,8 +51,8 @@ public class CounterTimer {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    System.out.println(counter.getSnrSum() / counter.getMessageCounter());
-                    dataCommunicator.sendDatasForShowing(counter.getMessageCounter(),counter.getSnrSum() / counter.getMessageCounter());
+                    System.out.println("SNR: " + counter.getSnrSum() + " Count: " + counter.getMessageCounter());
+                    dataCommunicator.sendDatasForShowing(counter.getMessageCounter(),new Double(counter.getSnrSum() / counter.getMessageCounter()).intValue());
                     counter.resetMessageCounter();
                     counter.resetSnrSum();
                 }

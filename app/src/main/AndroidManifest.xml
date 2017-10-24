@@ -16,13 +16,15 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -34,7 +36,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDTT1Wtkv2d-xXdW3uKyl9_rXC2jDoFJFc" />
 
-        <activity android:name=".BoardActivity" />
+        <activity android:name=".BoardActivity"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

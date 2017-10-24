@@ -1,14 +1,21 @@
 package patrik.onlab_start;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.commsignia.v2x.client.ITSApplication;
@@ -21,6 +28,7 @@ import com.commsignia.v2x.client.model.LdmFilter;
 import com.commsignia.v2x.client.model.LdmObject;
 import com.commsignia.v2x.client.model.LdmObjectType;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.TimeoutException;
 
@@ -32,7 +40,7 @@ import patrik.onlab_start.NavigationBoard.MenuItemId;
 import patrik.onlab_start.NavigationBoard.fragments.GraphFragment;
 import patrik.onlab_start.NavigationBoard.fragments.MapFragment;
 
-public class BoardActivity extends AppCompatActivity implements PacketCommunicator,DataCommunicator {
+public class BoardActivity extends AppCompatActivity implements PacketCommunicator, DataCommunicator {
     private NavigationView navigationView;
 
     private Fragment[] fragments;
@@ -43,11 +51,15 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
 
     private MapFragment mapFragment;
 
-    private MessageDetailsFragment messageDetailsFragment;
+    private CounterTimer timer;
 
-    private int selectedMenuItemIndex = 0;
+    private MenuItem stopMenuItem;
 
-    private int counterM = 0;
+    private MenuItem restartMenuItem;
+
+    private MenuItem saveMenuItem;
+
+    private Fragment lastSelectedFragment;
 
     // ITS application properties
     public static ITSApplication itsApplication = null;
@@ -64,22 +76,18 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
         setContentView(R.layout.activity_message_list);
 
         if (listFragment == null)
-            listFragment = (MessageListFragment) getSupportFragmentManager().findFragmentById(R.id.messageFragment);
+            listFragment = (MessageListFragment) getSupportFragmentManager().findFragmentById(R.id.messageListFragment);
 
         if (graphFragment == null)
-            graphFragment = new GraphFragment();
+            graphFragment = (GraphFragment) getSupportFragmentManager().findFragmentById(R.id.graphFragment);
 
         if (mapFragment == null)
-            mapFragment = new MapFragment();
-
-        if (messageDetailsFragment == null)
-            messageDetailsFragment = new MessageDetailsFragment();
-
+            mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         Intent intent = getIntent();
-        HashMap<String,String > selectedPropertiesValues = (HashMap<String, String>) intent.getSerializableExtra("selectedValues");
+        HashMap<String, String> selectedPropertiesValues = (HashMap<String, String>) intent.getSerializableExtra("selectedValues");
         DEFAULT_ITS_AID = Integer.valueOf(intent.getStringExtra("applicationID"));
         DEFAULT_TARGET_HOST = intent.getStringExtra("deviceAddress");
         DEFAULT_TARGET_PORT = Integer.valueOf(intent.getStringExtra("portNumber"));
@@ -100,7 +108,7 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
         }
 
         counter = new Counter();
-        CounterTimer timer = new CounterTimer(counter,this,0,3000);
+        timer = new CounterTimer(counter, this, 0, 3000);
         timer.start();
 
         //Start the ITS Application
@@ -132,17 +140,18 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
                                     PacketAncestor packet =
                                             new PacketAncestor(facilityNotification, NotificationType.FAC_NOTIFICATION);
                                     listFragment.adapter.addPacket(packet);
-//                                    counterM++;
+
+                                    if (!mapFragment.isNull()) {
+                                        mapFragment.setMarktoCarPosition(new PacketAncestor(facilityNotification,NotificationType.FAC_NOTIFICATION));
+                                    }
+
                                     counter.incrementMessageCounter();
                                     counter.incrementSnrSum(facilityNotification.getRssi());
-//                                    snrSum += facilityNotification.getRssi();
-                                    Log.d("SNR : ",String.valueOf(facilityNotification.getRssi()));
                                 }
-                                Log.d("Facility not. received", facilityNotification.getType().toString());
+                                Log.d("Facility notif received", facilityNotification.getType().toString());
                             }
                         });
                     }
-
 
 
                     @Override
@@ -153,13 +162,12 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
                                 synchronized (ldmObject) {
                                     PacketAncestor packet = new PacketAncestor(ldmObject, NotificationType.LDM_NOTIFICATION);
                                     listFragment.adapter.addPacket(packet);
-                                    if(!mapFragment.isNull()) {
-                                        mapFragment.setMarktoCarPosition(ldmObject.getLatitude(),ldmObject.getLongitude());
+                                    if (!mapFragment.isNull()) {
+                                        mapFragment.setMarktoCarPosition(new PacketAncestor(ldmObject,NotificationType.LDM_NOTIFICATION));
                                     }
-//                                    counterM++;
+
                                     counter.incrementMessageCounter();
                                     counter.incrementSnrSum(ldmObject.getRssiDbm());
-//                                    snrSum += ldmObject.getRssiDbm();
                                 }
                                 Log.d("Ldm received", ldmObject.getNotificationType().toString());
                             }
@@ -173,40 +181,143 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
                         new LdmFilter().setObjectTypeFilter(LdmObjectType.MAP, LdmObjectType.SPAT, LdmObjectType.BSM)
                 );
 
-            } catch (Exception e) {
-                Log.d("ClientException: ", "Cannot execute API commands");
+            } catch (ClientException e) {
+                Log.d("ClientException: ", "Cannot execute API commands (Failed to subscribe to event notifications)");
+                Snackbar.make(getCurrentFocus(), "Cannot execute API commands (Failed to subscribe to event notifications", Snackbar.LENGTH_LONG).show();
             }
 
-
-//            //Timer for measure the incoming packets
-//                Timer timer = new Timer();
-//                timer.scheduleAtFixedRate(new TimerTask() {
-//                    public void run() {
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                sendDatasForShowing(counter,0);
-//                                counter = 0;
-//                            }
-//                        });
-//                    }
-//                }, 0, 5000);
-
-
-        } catch (InterruptedException | ClientException |TimeoutException e) {
+        } catch (InterruptedException | ClientException | TimeoutException e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(),"ERROR", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(),"ERROR", Toast.LENGTH_LONG).show();
+            Snackbar.make(getCurrentFocus(), "Error", Snackbar.LENGTH_LONG).show();
+            finish();
             return;
         } finally {
             if (itsApplication != null)
                 Log.d("Request", "was sent.");
         }
 
+        lastSelectedFragment = listFragment;
+
         setUpNavigation();
 
-        setupStartingFragment(savedInstanceState);
+        //setupStartingFragment(savedInstanceState);
+
+
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        fragmentManager.beginTransaction()
+//                .hide(mapFragment)
+//                .hide(graphFragment)
+//                .commit();
+        mapFragment.getView().setVisibility(View.INVISIBLE);
+        graphFragment.getView().setVisibility(View.INVISIBLE);
+
 
         listFragment.startPacketCapturing(selectedPropertiesValues);
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+
+        stopMenuItem = (MenuItem) menu.findItem(R.id.stopItem);
+        stopMenuItem.setEnabled(true);
+        restartMenuItem = (MenuItem) menu.findItem(R.id.restartItem);
+        restartMenuItem.setEnabled(true);
+        saveMenuItem = (MenuItem) menu.findItem(R.id.saveItem);
+        saveMenuItem.setEnabled(false);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.stopItem:
+                if (itsApplication != null) {
+                    try {
+                        itsApplication.commands().deregisterBlocking();
+                    } catch (ClientException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "DeregisterBlocking failed!", Toast.LENGTH_LONG).show();
+                    } finally {
+                        itsApplication.shutdown();
+                    }
+                }
+                counter.resetMessageCounter();
+                counter.resetSnrSum();
+
+                timer.stop();
+
+                stopMenuItem.setEnabled(false);
+                restartMenuItem.setEnabled(true);
+                saveMenuItem.setEnabled(true);
+
+                graphFragment.enableSaving();
+
+                mapFragment.stopClearing();
+
+                return true;
+
+            case R.id.restartItem:
+                try {
+                    itsApplication.commands().deregisterBlocking();
+                } catch (ClientException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "DeregisterBlocking failed!", Toast.LENGTH_LONG).show();
+                } finally {
+                    itsApplication.shutdown();
+                    finish();
+                }
+                return true;
+
+            case R.id.saveItem:
+                showSaveAlertDialog();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        try {
+            itsApplication.commands().deregisterBlocking();
+            mapFragment.stopClearing();
+        } catch (ClientException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "DeregisterBlocking failed!", Toast.LENGTH_LONG).show();
+        } finally {
+            itsApplication.shutdown();
+            finish();
+        }
+    }
+
+    public void showSaveAlertDialog() {
+
+        final AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
+        LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.save_window_layout, null);
+
+        final EditText et = (EditText) view.findViewById(R.id.save_etFileName);
+        alertbox.setView(view);
+        alertbox.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                try {
+                    listFragment.adapter.savePackets(et.getText().toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        alertbox.show();
     }
 
     public void setUpNavigation() {
@@ -214,65 +325,62 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
                 listFragment,
                 graphFragment,
                 mapFragment,
-//                messageDetailsFragment
         };
 
-        addNavigationMenuItem(0,fragments[0],MenuItemId.PACKETS_ITEM);
-        addNavigationMenuItem(1,fragments[1],MenuItemId.GRAPHS_ITEM);
-        addNavigationMenuItem(2,fragments[2],MenuItemId.LIVEMAP_ITEM);
-        //addNavigationMenuItem(3,fragments[3],MenuItemId.DETAILS_ITEM);
+        addNavigationMenuItem(0, fragments[0], MenuItemId.PACKETS_ITEM);
+        addNavigationMenuItem(1, fragments[1], MenuItemId.GRAPHS_ITEM);
+        addNavigationMenuItem(2, fragments[2], MenuItemId.LIVEMAP_ITEM);
 
         navigationView.getMenu().setGroupCheckable(1, true, true);
     }
 
     private void addNavigationMenuItem(int index, final Fragment fragment, MenuItemId menuItemId) {
-        int id=0;
+        int id = 0;
         switch (menuItemId) {
             case PACKETS_ITEM:
-               id=R.string.list_menu_item;
+                id = R.string.list_menu_item;
                 break;
             case GRAPHS_ITEM:
-               id=R.string.graph_menu_item;
+                id = R.string.graph_menu_item;
                 break;
             case LIVEMAP_ITEM:
-               id=R.string.livemap_menu_item;
-                break;
-            case DETAILS_ITEM:
-                id=R.string.details_menu_item;
+                id = R.string.livemap_menu_item;
                 break;
         }
-            navigationView.getMenu()
-                    .add(1, index, Menu.NONE, id)
-                    .setCheckable(true)
-                    .setOnMenuItemClickListener(item -> {
-                        onNavigationItemSelected(item, fragment);
-                        return true;
-                    });
+        navigationView.getMenu()
+                .add(1, index, Menu.NONE, id)
+                .setCheckable(true)
+                .setOnMenuItemClickListener(item -> {
+                    onNavigationItemSelected(item, fragment);
+                    return true;
+                });
     }
 
     private void onNavigationItemSelected(MenuItem item, Fragment fragment) {
         item.setChecked(true);
-        selectedMenuItemIndex = item.getItemId();
 
         setTitle(item.getTitle());
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.messageFragment, fragment)
-                .commit();
+
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        fragmentManager.beginTransaction()
+//                .hide(lastSelectedFragment)
+//                .show(fragment)
+//                .commit();
+        lastSelectedFragment.getView().setVisibility(View.INVISIBLE);
+        fragment.getView().setVisibility(View.VISIBLE);
+
+        lastSelectedFragment = fragment;
     }
 
     @Override
     public void showPacketDetails(PacketAncestor data) {
-//            messageDetailsFragment.changeData(data);
-        //messageDetailsFragment.showDialog();
         showEditDialog(data);
-
     }
 
-    public void setupStartingFragment(Bundle savedInstanceState) {
-        selectMenuItem(0);
-    }
+//    public void setupStartingFragment() {
+//        selectMenuItem(0);
+//    }
 
     private void selectMenuItem(int index) {
         MenuItem item = navigationView.getMenu().getItem(index);
@@ -281,14 +389,14 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
 
     @Override
     public void sendDatasForShowing(double count, double avarageSNR) {
-        if(!graphFragment.isNull()) {
+        if (!graphFragment.isNull()) {
             graphFragment.updateDataFromActivity(count, avarageSNR);
         }
     }
 
     private void showEditDialog(PacketAncestor data) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        MessageDetailsFragment editNameDialogFragment = MessageDetailsFragment.newInstance("Some Title",data);
-        editNameDialogFragment.show(fragmentManager,"tag");
+        MessageDetailsFragment editNameDialogFragment = MessageDetailsFragment.newInstance("Some Title", data);
+        editNameDialogFragment.show(fragmentManager, "tag");
     }
 }

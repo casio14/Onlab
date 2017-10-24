@@ -3,19 +3,25 @@ package patrik.onlab_start;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.commsignia.v2x.client.ITSApplication;
@@ -23,6 +29,7 @@ import com.commsignia.v2x.client.ITSApplication;
 import com.commsignia.v2x.client.MessageSet;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,11 +47,14 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
     GraphFragment graphFragment;
     MessageListFragment listFragment;
 
+    GraphFragment loadGraphFragment;
+
     //Buttons
     Button startButton;
     Button stopButton;
     Button saveButton;
     Button restartButton;
+    Button loadButton;
 
     //Spinners
     Spinner typeSpinner;
@@ -125,17 +135,22 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         return true;
     }
 
-    /*@Override
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.load_settings:
-                showLoadAlertDialog();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            final LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main_layout);
+            LinearLayout.LayoutParams paramsMainLayout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT, 0);
+            mainLayout.setLayoutParams(paramsMainLayout);
+            mainLayout.setVisibility(View.VISIBLE);
+            final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frameLayout);
+            LinearLayout.LayoutParams paramsFrameLayout = new LinearLayout.LayoutParams(0, 0, 0);
+            frameLayout.setLayoutParams(paramsFrameLayout);
+            frameLayout.setVisibility(View.INVISIBLE);
         }
-    }*/
+        return true;
+    }
 
     //Show a message info in the MessageDetailsFragment
     public void showPacketDetails(PacketAncestor data) {
@@ -149,28 +164,8 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         messageDetailsFragment.changeData(data);*/
     }
 
-    public void showSaveAlertDialog() {
 
-        final AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
-        LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.save_window_layout, null);
-
-        final EditText et = (EditText) view.findViewById(R.id.save_etFileName);
-        alertbox.setView(view);
-        alertbox.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                try {
-                    listFragment.adapter.savePackets(et.getText().toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        alertbox.show();
-    }
-
-    /*public void showLoadAlertDialog() {
+    public void showLoadAlertDialog() {
 
         final int[] lastClickedIndex = {-1};
 
@@ -181,8 +176,12 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         View view = inflater.inflate(R.layout.load_window_layout, null);
         final TextView choosenFile = (TextView) view.findViewById(R.id.load_tvChoosen);
         choosenFile.setText("-");
-
-        File dir = new File(getApplicationContext().getFilesDir().getPath(), "SavedDatas"); //get folder
+        File dir = new File(Environment.getExternalStorageDirectory().getPath().toString(), "V2XPacketAnalyzer"); //get folder
+        if(!dir.exists()) {
+            Toast.makeText(getApplicationContext(),"Directory doesn't exists.",Toast.LENGTH_LONG).show();
+            return;
+        }
+        System.out.println(dir.toString());
         final File[] files = dir.listFiles();
         final String[] names = new String[files.length];
         for (int i = 0; i < files.length; i++) {
@@ -204,20 +203,34 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         alertbox.setNeutralButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (graphFragment == null)
-                    graphFragment = (GraphFragment) getFragmentManager().findFragmentById(R.id.graphFragment);
+                if (loadGraphFragment == null) {
+                    loadGraphFragment = (GraphFragment) getSupportFragmentManager().findFragmentById(R.id.loadGraphFragment);
+                }
                 try {
                     if (!choosenFile.getText().toString().equals("-"))
-                        graphFragment.loadDatas(getApplicationContext(), choosenFile.getText().toString());
-                } catch (IOException e) {
+                        loadGraphFragment.loadDatas(choosenFile.getText().toString());
+                        //Set the spinnerLayout larger
+
+
+                    final LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main_layout);
+                    LinearLayout.LayoutParams paramsMainLayout = new LinearLayout.LayoutParams(0, 0, 0);
+                    mainLayout.setLayoutParams(paramsMainLayout);
+                    mainLayout.setVisibility(View.INVISIBLE);
+                    final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frameLayout);
+                    LinearLayout.LayoutParams paramsFrameLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT, 0);
+                    frameLayout.setLayoutParams(paramsFrameLayout);
+                    frameLayout.setVisibility(View.VISIBLE);
+                } catch (Exception e) {
                     e.printStackTrace();
+                    Toast.makeText(getApplicationContext(),"Load failed",Toast.LENGTH_LONG).show();
+                    return;
                 }
             }
         });
 
         alertbox.setView(view);
         alertbox.show();
-    }*/
+    }
 
     //Send incoming packet infos to the GraphFragment
     @Override
@@ -446,6 +459,7 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         stopButton = (Button) findViewById(R.id.stopButton);
         saveButton = (Button) findViewById(R.id.mainSaveButton);
         restartButton = (Button) findViewById(R.id.restartButton);
+        loadButton = (Button) findViewById(R.id.loadButton);
 
         typeSpinner = (Spinner) findViewById(R.id.typeSpinner);
         firstPropertySpinner = (Spinner) findViewById(R.id.firstPropertySpinner);
@@ -655,7 +669,7 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showSaveAlertDialog();
+//                showSaveAlertDialog();
             }
         });
 
@@ -694,6 +708,14 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
                 saveButton.setVisibility(View.INVISIBLE);
                 restartButton.setVisibility(View.INVISIBLE);
                 startButton.setVisibility(View.VISIBLE);
+            }
+        });
+
+        loadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLoadAlertDialog();
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
         });
     }
@@ -759,23 +781,23 @@ public class MainActivity extends AppCompatActivity implements PacketCommunicato
     public boolean validateEditTexts() {
         String deviceAddressRegExp = "\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}";
 
-        if(measuringInterval_eT.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(),"Invalid measuring interval!",Toast.LENGTH_LONG).show();
+        if(measuringInterval_eT.getText().toString().equals("") || !measuringInterval_eT.getText().toString().matches("\\d{1,5}")) {
+            Snackbar.make(getCurrentFocus(),"Invalid measuring interval!",Snackbar.LENGTH_LONG).show();
             return false;
         }
 
-        if(applicationID.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(),"Invalid application ID!",Toast.LENGTH_LONG).show();
+        if(applicationID.getText().toString().equals("") || !applicationID.getText().toString().matches("\\d{1,10}")) {
+            Snackbar.make(getCurrentFocus(),"Invalid application ID!",Snackbar.LENGTH_LONG).show();
             return false;
         }
 
         if(!deviceAddress.getText().toString().matches(deviceAddressRegExp)) {
-            Toast.makeText(getApplicationContext(),"Invalid device address!",Toast.LENGTH_LONG).show();
+            Snackbar.make(getCurrentFocus(),"Invalid device address!",Snackbar.LENGTH_LONG).show();
             return false;
         }
 
-        if(portNumber.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(),"Invalid port number!",Toast.LENGTH_LONG).show();
+        if(portNumber.getText().toString().equals("") || !portNumber.getText().toString().matches("\\d{1,5}")) {
+            Snackbar.make(getCurrentFocus(),"Invalid port number!",Snackbar.LENGTH_LONG).show();
             return false;
         }
 

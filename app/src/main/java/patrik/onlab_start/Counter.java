@@ -7,7 +7,7 @@ package patrik.onlab_start;
 public class Counter {
 
     private int messageCounter;
-    private float snrSum;
+    private double snrSum;
 
 
     public Counter() {
@@ -19,7 +19,7 @@ public class Counter {
         return messageCounter;
     }
 
-    public float getSnrSum() {
+    public double getSnrSum() {
         return snrSum;
     }
 
@@ -35,7 +35,7 @@ public class Counter {
         messageCounter++;
     }
 
-    public void incrementSnrSum(float sum) {
+    public void incrementSnrSum(double sum) {
         snrSum += sum;
     }
 }
