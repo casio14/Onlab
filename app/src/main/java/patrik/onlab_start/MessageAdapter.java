@@ -73,6 +73,8 @@ public class MessageAdapter extends ArrayAdapter {
             holder.tvParam1 = (TextView) v.findViewById(R.id.tvParam1);
             holder.tvParam2 = (TextView) v.findViewById(R.id.tvParam2);
             holder.tvParam3 = (TextView) v.findViewById(R.id.tvParam3);
+            holder.tvLocalPos = (TextView) v.findViewById(R.id.tvLocalPos);
+            holder.tvParamLocalPos = (TextView) v.findViewById(R.id.tvLocalPosParameter);
             v.setTag(holder);
         }
 
@@ -84,6 +86,9 @@ public class MessageAdapter extends ArrayAdapter {
         final PacketAncestor element = list.get(position);
         if (element != null) {
             ViewHolder holder = (ViewHolder) v.getTag();
+
+            holder.tvLocalPos.setText("Local position");
+            holder.tvParamLocalPos.setText(element.getLocalLatitude() + ", " + element.getLocalLongitude());
 
             if (element.getNotificationType().equals(NotificationType.FAC_NOTIFICATION)) {
                 FacilityNotification fc = (FacilityNotification) element.getObject();
@@ -208,13 +213,13 @@ public class MessageAdapter extends ArrayAdapter {
 
             String firstLineDENM = "ActionID,DetectionTime,ReferenceTime,StationType,ValidityDuration,Altitude,Latitude,Longitude,DangerousGoods,LaneClosed,Heading," +
                     "Speed,EventType,Ext.Temperature,InformationQuality,LaneNumber,RelevanceDistance,RelevanceTrafficDirection,RoadType,SpeedLimit," +
-                    "StartingPointSpeedLimit,StationaryCause,StationarySince,TransmissionInterval" + "\n";
+                    "StartingPointSpeedLimit,StationaryCause,StationarySince,TransmissionInterval,LocalLatitude,LocalLongitude" + "\n";
 
             String firstLineCAM = "Heading,Speed,StationType,Altitude,Latitude,Longitude,VehicleRole,PerformanceClass,LaneNumber,DriveDirection," +
                     "LongitudinalAcceleration,LateralAcceleration,VerticalAcceleration,EmbarkationStatus,CurvatureValue,CurvatureCalculationMode," +
                     "YawRate,SteeringWheelAngle,VehicleLength,VehicleWidth,PtActivationType,SpecialTransportType,DangerousGoodsBasic," +
                     "RoadworksSubCauseCode,TrafficRule,SpeedLimit,SirenActivated,IndicationCauseCode,EmergencyPriorityRequestForFreeCrossingAtATrafficLight," +
-                    "ProtectedZoneLatitude,ProtectedZoneLongitude" + "\n";
+                    "ProtectedZoneLatitude,ProtectedZoneLongitude,LocalLatitude,LocalLongitude" + "\n";
 
             String firstLineMAP = "Longitude,Latitude,TimeStamp,ObjectID,Speed,Security,1.Intersection Longitude,1.Intersection Latitude," +
                     "1.Intersection ID,1.Intersection laneWidth,1.Intersection revision,1.Intersection name,1.Intersection laneCount," +
@@ -222,13 +227,13 @@ public class MessageAdapter extends ArrayAdapter {
                     "2.Intersection name,2.Intersection laneCount,3.Intersection Longitude,3.Intersection Latitude,3.Intersection ID," +
                     "3.Intersection laneWidth,3.Intersection revision,3.Intersection name,3.Intersection laneCount,4.Intersection Longitude," +
                     "4.Intersection Latitude,4.Intersection ID,4.Intersection laneWidth,4.Intersection revision,4.Intersection name," +
-                    "4.Intersection laneCount" + "\n";
+                    "4.Intersection laneCount,LocalLatitude,LocalLongitude" + "\n";
 
             String firstLineSPAT = "Count of intersectionStates,Longitude,Latitude,TimeStamp,ObjectID,Speed,Security," +
                     "1.IntersectionState TimeStamp,1.IntersectionState ID,1.IntersectionState LaneCount,1.IntersectionState Revision" +
                     "2.IntersectionState TimeStamp,2.IntersectionState ID,2.IntersectionState LaneCount,2.IntersectionState Revision" +
                     "3.IntersectionState TimeStamp,3.IntersectionState ID,3.IntersectionState LaneCount,3.IntersectionState Revision" +
-                    "4.IntersectionState TimeStamp,4.IntersectionState ID,4.IntersectionState LaneCount,4.IntersectionState Revision" + "\n";
+                    "4.IntersectionState TimeStamp,4.IntersectionState ID,4.IntersectionState LaneCount,4.IntersectionState Revision,LocalLatitude,LocalLongitude" + "\n";
 
             String firstLineBSM = "Longitude,Latitude,Id,Elevation,AbsStatus,AuxBrakeStatus,BrakeBoostStatus,isABSActivated,isAirBagDeployment,isDisabledVehicle," +
                     "isEmergencyResponse,isFlatTire,isHardBraking,isHazardLights,isHazardousMaterials,isLightsChanged,isStabilityControlActivated," +
@@ -239,7 +244,7 @@ public class MessageAdapter extends ArrayAdapter {
                     "isLocalCorrectionsPresent,isMonitored,isNetworkCorrectionsPresent,isUnavailable,PathPredictionConfidence,PathPredictionRadiusOfCurvature," +
                     "SecMark,SemiMajorAccuracy,SemiMinorAccuracy,SemiMajorOrientation,Speed,YawRate,WheelBrakeisLeftFront,WheelBrakeisRigthFront,WheelBrakeisLeftRear," +
                     "WheelBrakeisRightRear,WheelBrakeUnavailable,VerticalAcceleration,VehicleType,VehicleLength,VehicheWidth,TransmissionState,TractionControlStatus,ThrottlePosition," +
-                    "SteeringWheelAngle,StabilityControlStatus" + "\n";
+                    "SteeringWheelAngle,StabilityControlStatus,LocalLatitude,LocalLongitude" + "\n";
 
             fw.write(firstLineDENM);
             fw.write(firstLineCAM);
@@ -255,11 +260,13 @@ public class MessageAdapter extends ArrayAdapter {
                     switch (fn.getType().toString()) {
                         case "DENM":
                             String lineDENM = fillDENMString(fn);
+                            lineDENM += ","+p.getLocalLatitude()+","+p.getLocalLongitude();
                             lineDENM += "\n";
                             fw.write(lineDENM);
                             break;
                         case "CAM":
                             String lineCAM = fillCAMString(fn);
+                            lineCAM += ","+p.getLocalLatitude()+","+p.getLocalLongitude();
                             lineCAM += "\n";
                             fw.write(lineCAM);
                             break;
@@ -271,16 +278,19 @@ public class MessageAdapter extends ArrayAdapter {
                     switch (lo.getObjectType().toString()) {
                         case "MAP":
                             String lineMAP = fillMAPString(lo);
+                            lineMAP += ","+p.getLocalLatitude()+","+p.getLocalLongitude();
                             lineMAP += "\n";
                             fw.write(lineMAP);
                             break;
                         case "SPAT":
                             String lineSPAT = fillSPATString(lo);
+                            lineSPAT += ","+p.getLocalLatitude()+","+p.getLocalLongitude();
                             lineSPAT += "\n";
                             fw.write(lineSPAT);
                             break;
                         case "BSM":
                             String lineBSM = fillBSMString(lo);
+                            lineBSM += ","+p.getLocalLatitude()+","+p.getLocalLongitude();
                             lineBSM += "\n";
                             fw.write(lineBSM);
                             break;
@@ -1250,8 +1260,10 @@ public class MessageAdapter extends ArrayAdapter {
         TextView tvParamType1;
         TextView tvParamType2;
         TextView tvParamType3;
+        TextView tvLocalPos;
         TextView tvParam1;
         TextView tvParam2;
         TextView tvParam3;
+        TextView tvParamLocalPos;
     }
 }

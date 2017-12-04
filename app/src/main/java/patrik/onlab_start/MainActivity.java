@@ -42,16 +42,10 @@ import patrik.onlab_start.NavigationBoard.fragments.GraphFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    //Fragments
-    GraphFragment graphFragment;
-
     GraphFragment loadGraphFragment;
 
     //Buttons
     Button startButton;
-    Button stopButton;
-    Button saveButton;
-    Button restartButton;
     Button loadButton;
 
     //Spinners
@@ -74,27 +68,11 @@ public class MainActivity extends AppCompatActivity {
     EditText deviceAddress;
     EditText portNumber;
 
-    //Timer
-    Timer timer;
-
     //Selected Properties
     Map<String,Integer> selectedPropertiesPositions;
     HashMap<String,String> selectedPropertiesValues;
 
     String selected = "DENM";
-
-    //GraphFragment properties
-    static int messageCounter = 0;
-    static double avarageSNR = 0;
-    static double snrSum = 0;
-
-
-    //ITS application properties
-    public static ITSApplication itsApplication = null;
-    public static final int DEFAULT_ITS_AID = 55;
-    public static final String DEFAULT_TARGET_HOST = "192.168.0.76";
-    public static final int DEFAULT_TARGET_PORT = 7942;
-    public static final MessageSet DEFAULT_MESSAGE_SET = MessageSet.D;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -304,20 +282,31 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (typeSpinner.getSelectedItem().toString().equals("DENM")) {
-                    selectedPropertiesPositions.replace("DENM_1",firstPropertySpinner.getSelectedItemPosition());
+                    //selectedPropertiesPositions.replace("DENM_1",firstPropertySpinner.getSelectedItemPosition());
+                    selectedPropertiesPositions.remove("DENM_1");
+                    selectedPropertiesPositions.put("DENM_1",firstPropertySpinner.getSelectedItemPosition());
+
                 }
 
                 if (typeSpinner.getSelectedItem().toString().equals("CAM")) {
-                    selectedPropertiesPositions.replace("CAM_1",firstPropertySpinner.getSelectedItemPosition());
+                    //selectedPropertiesPositions.replace("CAM_1",firstPropertySpinner.getSelectedItemPosition());
+                    selectedPropertiesPositions.remove("CAM_1");
+                    selectedPropertiesPositions.put("CAM_1",secondPropertySpinner.getSelectedItemPosition());
                 }
                 if (typeSpinner.getSelectedItem().toString().equals("MAP")) {
-                    selectedPropertiesPositions.replace("MAP_1",firstPropertySpinner.getSelectedItemPosition());
+                    //selectedPropertiesPositions.replace("MAP_1",firstPropertySpinner.getSelectedItemPosition());
+                    selectedPropertiesPositions.remove("MAP_1");
+                    selectedPropertiesPositions.put("MAP_1",secondPropertySpinner.getSelectedItemPosition());
                 }
                 if (typeSpinner.getSelectedItem().toString().equals("SPAT")) {
-                    selectedPropertiesPositions.replace("SPAT_1",firstPropertySpinner.getSelectedItemPosition());
+                    //selectedPropertiesPositions.replace("SPAT_1",firstPropertySpinner.getSelectedItemPosition());
+                    selectedPropertiesPositions.remove("SPAT_1");
+                    selectedPropertiesPositions.put("SPAT_1",secondPropertySpinner.getSelectedItemPosition());
                 }
                 if (typeSpinner.getSelectedItem().toString().equals("BSM")) {
-                    selectedPropertiesPositions.replace("BSM_1",firstPropertySpinner.getSelectedItemPosition());
+                    //selectedPropertiesPositions.replace("BSM_1",firstPropertySpinner.getSelectedItemPosition());
+                    selectedPropertiesPositions.remove("BSM_1");
+                    selectedPropertiesPositions.put("BSM_1",secondPropertySpinner.getSelectedItemPosition());
                 }
 
             }
@@ -332,23 +321,33 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (typeSpinner.getSelectedItem().toString().equals("DENM")) {
-                    selectedPropertiesPositions.replace("DENM_2",secondPropertySpinner.getSelectedItemPosition());
+                    //selectedPropertiesPositions.replace("DENM_2",secondPropertySpinner.getSelectedItemPosition());
+                    selectedPropertiesPositions.remove("DENM_2");
+                    selectedPropertiesPositions.put("DENM_2",secondPropertySpinner.getSelectedItemPosition());
                 }
 
                 if (typeSpinner.getSelectedItem().toString().equals("CAM")) {
-                    selectedPropertiesPositions.replace("CAM_2",secondPropertySpinner.getSelectedItemPosition());
+                    //selectedPropertiesPositions.replace("CAM_2",secondPropertySpinner.getSelectedItemPosition());
+                    selectedPropertiesPositions.remove("CAM_2");
+                    selectedPropertiesPositions.put("CAM_2",secondPropertySpinner.getSelectedItemPosition());
                 }
 
                 if (typeSpinner.getSelectedItem().toString().equals("MAP")) {
-                    selectedPropertiesPositions.replace("MAP_2",secondPropertySpinner.getSelectedItemPosition());
+                    //selectedPropertiesPositions.replace("MAP_2",secondPropertySpinner.getSelectedItemPosition());
+                    selectedPropertiesPositions.remove("MAP_2");
+                    selectedPropertiesPositions.put("MAP_2",secondPropertySpinner.getSelectedItemPosition());
                 }
 
                 if (typeSpinner.getSelectedItem().toString().equals("SPAT")) {
-                    selectedPropertiesPositions.replace("SPAT_2",secondPropertySpinner.getSelectedItemPosition());
+                    //selectedPropertiesPositions.replace("SPAT_2",secondPropertySpinner.getSelectedItemPosition());
+                    selectedPropertiesPositions.remove("SPAT_2");
+                    selectedPropertiesPositions.put("SPAT_2",secondPropertySpinner.getSelectedItemPosition());
                 }
 
                 if (typeSpinner.getSelectedItem().toString().equals("BSM")) {
-                    selectedPropertiesPositions.replace("BSM_2",secondPropertySpinner.getSelectedItemPosition());
+                    //selectedPropertiesPositions.replace("BSM_2",secondPropertySpinner.getSelectedItemPosition());
+                    selectedPropertiesPositions.remove("BSM_2");
+                    selectedPropertiesPositions.put("BSM_2",secondPropertySpinner.getSelectedItemPosition());
                 }
             }
 
@@ -362,23 +361,33 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(typeSpinner.getSelectedItem().toString().equals("DENM")) {
-                    selectedPropertiesPositions.replace("DENM_3",thirdPropertySpinner.getSelectedItemPosition());
+                    //selectedPropertiesPositions.replace("DENM_3",thirdPropertySpinner.getSelectedItemPosition());
+                    selectedPropertiesPositions.remove("DENM_3");
+                    selectedPropertiesPositions.put("DENM_3",thirdPropertySpinner.getSelectedItemPosition());
                 }
 
                 if(typeSpinner.getSelectedItem().toString().equals("CAM")) {
-                    selectedPropertiesPositions.replace("CAM_3",thirdPropertySpinner.getSelectedItemPosition());
+                    //selectedPropertiesPositions.replace("CAM_3",thirdPropertySpinner.getSelectedItemPosition());
+                    selectedPropertiesPositions.remove("CAM_3");
+                    selectedPropertiesPositions.put("CAM_3",thirdPropertySpinner.getSelectedItemPosition());
                 }
 
                 if(typeSpinner.getSelectedItem().toString().equals("MAP")) {
-                    selectedPropertiesPositions.replace("MAP_3",thirdPropertySpinner.getSelectedItemPosition());
+                    //selectedPropertiesPositions.replace("MAP_3",thirdPropertySpinner.getSelectedItemPosition());
+                    selectedPropertiesPositions.remove("MAP_3");
+                    selectedPropertiesPositions.put("MAP_3",thirdPropertySpinner.getSelectedItemPosition());
                 }
 
                 if(typeSpinner.getSelectedItem().toString().equals("SPAT")) {
-                    selectedPropertiesPositions.replace("SPAT_3",thirdPropertySpinner.getSelectedItemPosition());
+                    //selectedPropertiesPositions.replace("SPAT_3",thirdPropertySpinner.getSelectedItemPosition());
+                    selectedPropertiesPositions.remove("SPAT_3");
+                    selectedPropertiesPositions.put("SPAT_3",thirdPropertySpinner.getSelectedItemPosition());
                 }
 
                 if(typeSpinner.getSelectedItem().toString().equals("BSM")) {
-                    selectedPropertiesPositions.replace("BSM_3",thirdPropertySpinner.getSelectedItemPosition());
+                    //selectedPropertiesPositions.replace("BSM_3",thirdPropertySpinner.getSelectedItemPosition());
+                    selectedPropertiesPositions.remove("BSM_3");
+                    selectedPropertiesPositions.put("BSM_3",thirdPropertySpinner.getSelectedItemPosition());
                 }
             }
 
@@ -424,9 +433,6 @@ public class MainActivity extends AppCompatActivity {
     public void componentInitialization() {
         //Components initialization
         startButton = (Button) findViewById(R.id.startButton);
-        stopButton = (Button) findViewById(R.id.stopButton);
-        saveButton = (Button) findViewById(R.id.mainSaveButton);
-        restartButton = (Button) findViewById(R.id.restartButton);
         loadButton = (Button) findViewById(R.id.loadButton);
 
         typeSpinner = (Spinner) findViewById(R.id.typeSpinner);
@@ -439,10 +445,6 @@ public class MainActivity extends AppCompatActivity {
         applicationID = (EditText) findViewById(R.id.et_appID);
         deviceAddress = (EditText) findViewById(R.id.et_deviceAddress);
         portNumber = (EditText) findViewById(R.id.et_portNumber);
-
-        stopButton.setVisibility(View.INVISIBLE);
-        saveButton.setVisibility(View.INVISIBLE);
-        restartButton.setVisibility(View.INVISIBLE);
 
         //Set the spinnerLayout larger
         final LinearLayout spinnerLayout = (LinearLayout) findViewById(R.id.spinnerLayout);
@@ -467,6 +469,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("deviceAddress",deviceAddress.getText().toString());
                 intent.putExtra("portNumber",portNumber.getText().toString());
                 intent.putExtra("messageSet",messageSetsSpinner.getSelectedItem().toString());
+                intent.putExtra("interval",measuringInterval_eT.getText().toString());
                 startActivity(intent);
             }
         });
@@ -517,25 +520,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateSelectedPropertiesValuesHashMap() {
-        selectedPropertiesValues.replace("DENM_1",adapterDENM_Properties.getItem(selectedPropertiesPositions.get("DENM_1")).toString());
-        selectedPropertiesValues.replace("DENM_2",adapterDENM_Properties.getItem(selectedPropertiesPositions.get("DENM_2")).toString());
-        selectedPropertiesValues.replace("DENM_3",adapterDENM_Properties.getItem(selectedPropertiesPositions.get("DENM_3")).toString());
+        selectedPropertiesValues.remove("DENM_1"); selectedPropertiesValues.put("DENM_1",adapterDENM_Properties.getItem(selectedPropertiesPositions.get("DENM_1")).toString());
+        selectedPropertiesValues.remove("DENM_2"); selectedPropertiesValues.put("DENM_2",adapterDENM_Properties.getItem(selectedPropertiesPositions.get("DENM_2")).toString());
+        selectedPropertiesValues.remove("DENM_3"); selectedPropertiesValues.put("DENM_3",adapterDENM_Properties.getItem(selectedPropertiesPositions.get("DENM_3")).toString());
 
-        selectedPropertiesValues.replace("CAM_1",adapterCAM_Properties.getItem(selectedPropertiesPositions.get("CAM_1")).toString());
-        selectedPropertiesValues.replace("CAM_2",adapterCAM_Properties.getItem(selectedPropertiesPositions.get("CAM_2")).toString());
-        selectedPropertiesValues.replace("CAM_3",adapterCAM_Properties.getItem(selectedPropertiesPositions.get("CAM_3")).toString());
+        selectedPropertiesValues.remove("CAM_1"); selectedPropertiesValues.put("CAM_1",adapterCAM_Properties.getItem(selectedPropertiesPositions.get("CAM_1")).toString());
+        selectedPropertiesValues.remove("CAM_2"); selectedPropertiesValues.put("CAM_2",adapterCAM_Properties.getItem(selectedPropertiesPositions.get("CAM_2")).toString());
+        selectedPropertiesValues.remove("CAM_3"); selectedPropertiesValues.put("CAM_3",adapterCAM_Properties.getItem(selectedPropertiesPositions.get("CAM_3")).toString());
 
-        selectedPropertiesValues.replace("MAP_1",adapterMAP_Properties.getItem(selectedPropertiesPositions.get("MAP_1")).toString());
-        selectedPropertiesValues.replace("MAP_2",adapterMAP_Properties.getItem(selectedPropertiesPositions.get("MAP_2")).toString());
-        selectedPropertiesValues.replace("MAP_3",adapterMAP_Properties.getItem(selectedPropertiesPositions.get("MAP_3")).toString());
+        selectedPropertiesValues.remove("MAP_1"); selectedPropertiesValues.put("MAP_1",adapterMAP_Properties.getItem(selectedPropertiesPositions.get("MAP_1")).toString());
+        selectedPropertiesValues.remove("MAP_2"); selectedPropertiesValues.put("MAP_2",adapterMAP_Properties.getItem(selectedPropertiesPositions.get("MAP_2")).toString());
+        selectedPropertiesValues.remove("MAP_3"); selectedPropertiesValues.put("MAP_3",adapterMAP_Properties.getItem(selectedPropertiesPositions.get("MAP_3")).toString());
 
-        selectedPropertiesValues.replace("SPAT_1",adapterSPAT_Properties.getItem(selectedPropertiesPositions.get("SPAT_1")).toString());
-        selectedPropertiesValues.replace("SPAT_2",adapterSPAT_Properties.getItem(selectedPropertiesPositions.get("SPAT_2")).toString());
-        selectedPropertiesValues.replace("SPAT_3",adapterSPAT_Properties.getItem(selectedPropertiesPositions.get("SPAT_3")).toString());
+        selectedPropertiesValues.remove("SPAT_1"); selectedPropertiesValues.put("SPAT_1",adapterSPAT_Properties.getItem(selectedPropertiesPositions.get("SPAT_1")).toString());
+        selectedPropertiesValues.remove("SPAT_2"); selectedPropertiesValues.put("SPAT_2",adapterSPAT_Properties.getItem(selectedPropertiesPositions.get("SPAT_2")).toString());
+        selectedPropertiesValues.remove("SPAT_3"); selectedPropertiesValues.put("SPAT_3",adapterSPAT_Properties.getItem(selectedPropertiesPositions.get("SPAT_3")).toString());
 
-        selectedPropertiesValues.replace("BSM_1",adapterBSM_Properties.getItem(selectedPropertiesPositions.get("BSM_1")).toString());
-        selectedPropertiesValues.replace("BSM_2",adapterBSM_Properties.getItem(selectedPropertiesPositions.get("BSM_2")).toString());
-        selectedPropertiesValues.replace("BSM_3",adapterBSM_Properties.getItem(selectedPropertiesPositions.get("BSM_3")).toString());
+        selectedPropertiesValues.remove("BSM_1"); selectedPropertiesValues.put("BSM_1",adapterBSM_Properties.getItem(selectedPropertiesPositions.get("BSM_1")).toString());
+        selectedPropertiesValues.remove("BSM_2"); selectedPropertiesValues.put("BSM_2",adapterBSM_Properties.getItem(selectedPropertiesPositions.get("BSM_2")).toString());
+        selectedPropertiesValues.remove("BSM_3"); selectedPropertiesValues.put("BSM_3",adapterBSM_Properties.getItem(selectedPropertiesPositions.get("BSM_3")).toString());
     }
 
     public boolean validateEditTexts() {

@@ -152,9 +152,6 @@ public class MessageDetailsFragment extends DialogFragment {
                     new FacilityNotificationFieldValue(denmProperties[i],fc).getDENMValue()
             );
         }
-
-        //Set values
-        //TODO: set values
     }
 
     public void setCamDetails(FacilityNotification fc) {
@@ -215,11 +212,6 @@ public class MessageDetailsFragment extends DialogFragment {
         args.putString("title", title);
         frag.setArguments(args);
         return frag;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     private void createTextViews(int count) {

@@ -23,7 +23,7 @@
             android:id="@+id/tvParamType1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="2"
             android:paddingLeft="1dp"
             android:paddingRight="1dp"
             android:text="PARAM2"
@@ -47,10 +47,21 @@
             android:id="@+id/tvParamType3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3.5"
+            android:layout_weight="2"
             android:paddingLeft="1dp"
             android:paddingRight="1dp"
             android:text="PARAM4"
+            android:textSize="13dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvLocalPos"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.5"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp"
+            android:text="LOCALPOS"
             android:textSize="13dp"
             android:textStyle="bold"/>
 
@@ -72,7 +83,7 @@
             android:id="@+id/tvParam1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="2"
             android:paddingLeft="1dp"
             android:paddingRight="1dp"
             android:text="PARAM2"
@@ -92,10 +103,19 @@
             android:id="@+id/tvParam3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3.5"
+            android:layout_weight="2"
             android:paddingLeft="1dp"
             android:paddingRight="1dp"
             android:text="PARAM4" />
+
+        <TextView
+            android:id="@+id/tvLocalPosParameter"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.5"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp"
+            android:text="LOCALPOS" />
 
 
     </LinearLayout>

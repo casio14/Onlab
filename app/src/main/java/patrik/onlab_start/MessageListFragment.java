@@ -53,11 +53,6 @@ public class MessageListFragment extends ListFragment{
         }
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
     public void sendData(PacketAncestor data) {
         communicator.showPacketDetails(data);
     }
@@ -87,31 +82,7 @@ public class MessageListFragment extends ListFragment{
     public void startPacketCapturing(Map<String,String> selectedValues) {
 
         //Create and set an adapter
-        //TESTING------------------------------------
-        DENM denm = new DENM();
-        denm.setDetectionTime(new Date());
-        denm.setEventType(PrimaryCause.ROADWORKS.withSubCause(RoadworksSubCauseCode.MAJOR_ROADWORKS));
-        denm.setActionID(new DENMActionID(0l, 0));
-
-        FacilityNotification.Builder n = new FacilityNotification.Builder().withDenmEvent(denm).withType(FacilityNotificationType.DENM);
-        FacilityNotification not = n.build();
-        PacketAncestor p1 = new PacketAncestor(not, NotificationType.FAC_NOTIFICATION);
-
-        FacilityNotification.Builder n2 = new FacilityNotification.Builder().withType(FacilityNotificationType.CAM);
-        FacilityNotification not2 = n2.build();
-        PacketAncestor p2 = new PacketAncestor(not2,NotificationType.FAC_NOTIFICATION);
-
-        LdmObject ldm1 = new LdmObject();
-        ldm1.setObjectType(LdmObjectType.MAP);
-        PacketAncestor p4 = new PacketAncestor(ldm1,NotificationType.LDM_NOTIFICATION);
-
-        LdmObject ldm2 = new LdmObject();
-        ldm2.setObjectType(LdmObjectType.SPAT);
-        PacketAncestor p5 = new PacketAncestor(ldm2,NotificationType.LDM_NOTIFICATION);
-        //----------------------------------------------------
-
         List<PacketAncestor> values1 = new ArrayList<PacketAncestor>();
-        values1.add(p1); values1.add(p2); values1.add(p4); values1.add(p5);
         List<PacketAncestor> values2 = Collections.synchronizedList(values1); // Thread safe List
 
         adapter = new MessageAdapter(getActivity(),android.R.layout.simple_list_item_1,values2,selectedValues);

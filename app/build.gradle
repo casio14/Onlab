@@ -19,11 +19,11 @@ apply plugin: 'org.hidetake.ssh'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '25.0.3'
 
     defaultConfig {
         applicationId "patrik.onlab_start"
-        minSdkVersion 19
+        minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -50,11 +50,11 @@ android {
 
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile files('libs/log4j-1.2.17.jar')
-    compile files('libs/slf4j-simple-1.7.7.jar')
-    compile files('libs/slf4j-api-1.7.7.jar')
-    compile files('libs/jsr305-3.0.0.jar')
+    //compile fileTree(dir: 'libs', include: ['*.jar'])
+    //compile files('libs/log4j-1.2.17.jar')
+    //compile files('libs/slf4j-simple-1.7.7.jar')
+    //compile files('libs/slf4j-api-1.7.7.jar')
+    //compile files('libs/jsr305-3.0.0.jar')
 
 
     sourceCompatibility = '1.7'

@@ -76,36 +76,15 @@ public class GraphFragment extends Fragment implements Serializable {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState!=null) {
-            System.out.println("STATED LOADED");
-            mSeries1.resetData((DataPoint[]) savedInstanceState.getSerializable("mSeries1"));
-            mSeries2.resetData((DataPoint[]) savedInstanceState.getSerializable("mSeries2"));
-        }
-        else {
-            mSeries1 = new LineGraphSeries<>();
-            mSeries2 = new LineGraphSeries<>();
-        }
+        mSeries1 = new LineGraphSeries<>();
+        mSeries2 = new LineGraphSeries<>();
 
-//        mSeries1 = new LineGraphSeries<>();
         mSeries1.setDrawDataPoints(true);
         mSeries1.setDataPointsRadius(10);
 
-//        mSeries2 = new LineGraphSeries<>();
         mSeries2.setDrawDataPoints(true);
         mSeries2.setDataPointsRadius(10);
         mSeries2.setColor(Color.parseColor("#00FF00"));
-
-//        graph.setY(-5);
-
-//        graph.getViewport().setYAxisBoundsManual(true);
-//        graph.getViewport().setMinY(-100.0);
-//        graph.getViewport().setMaxY(110.0);
-//
-//        // set manual X bounds
-//        graph.getViewport().setXAxisBoundsManual(true);
-//        graph.getViewport().setMinX(0);
-
-        System.out.println("ONCREATE");
     }
 
     @Override
@@ -120,11 +99,8 @@ public class GraphFragment extends Fragment implements Serializable {
 
         graph.getViewport().setXAxisBoundsStatus(Viewport.AxisBoundsStatus.FIX);
         graph.getViewport().setYAxisBoundsStatus(Viewport.AxisBoundsStatus.AUTO_ADJUSTED);
-//        graph.setKeepScreenOn(true);
-//        graph.getViewport().scrollToEnd();
 
         graph.addSeries(mSeries1);
-//        graph.addSeries(mSeries2);
 
         dataTypeSpinner = (Spinner) view.findViewById(R.id.dataTypeSpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
@@ -179,16 +155,11 @@ public class GraphFragment extends Fragment implements Serializable {
         saveDatasButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                     showSaveAlertDialog();
-//                    saveDatas("elsoproba");
-
             }
         });
 
         saveDatasButton.setEnabled(false);
-
-        System.out.println("ONCREATEVIEW");
         return view;
     }
 
@@ -220,7 +191,6 @@ public class GraphFragment extends Fragment implements Serializable {
             }
         };
         mHandler.postDelayed(mTimer1, 300);
-        System.out.println("ONRESUME");
     }
 
     //Stop the graph
@@ -228,13 +198,6 @@ public class GraphFragment extends Fragment implements Serializable {
     public void onPause() {
         mHandler.removeCallbacks(mTimer1);
         super.onPause();
-        System.out.println("ONPAUSE");
-    } //GOOD
-
-    public void clearDatas() {
-        mSeries1.resetData(new DataPoint[]{});
-        mSeries2.resetData(new DataPoint[]{});
-        lastX=0;
     } //GOOD
 
     public void updateDataFromActivity(double messageCount, double snrAvarageValue) {
@@ -311,7 +274,6 @@ public class GraphFragment extends Fragment implements Serializable {
 
             String name = fileName.replace("_packets.ser","").replace("_snr.ser","");
 
-            String root  = Environment.getExternalStorageDirectory().getPath().toString();
             File packetFile = new File(Environment.getExternalStorageDirectory().getPath().toString()+"/V2XPacketAnalyzer/"+name+"_packets.ser");
             if(!packetFile.exists())
                 throw new Exception();

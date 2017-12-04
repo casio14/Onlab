@@ -33,23 +33,6 @@
             android:padding="10dp"
             android:weightSum="10">
 
-            <!--<FrameLayout-->
-            <!--android:id="@+id/messageFrame"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:layout_marginRight="5dp"-->
-            <!--android:layout_weight="7"-->
-            <!--android:background="@drawable/rounded_fragment_stlye"-->
-            <!--android:padding="3dp">-->
-
-            <!--<fragment-->
-            <!--android:id="@+id/messageFragment"-->
-            <!--android:name="patrik.onlab_start.MessageListFragment"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"></fragment>-->
-
-            <!--</FrameLayout>-->
-
             <LinearLayout
                 android:id="@+id/spinnerLayout"
                 android:layout_width="match_parent"
@@ -140,35 +123,12 @@
                     android:background="@drawable/play" />
 
                 <Button
-                    android:id="@+id/stopButton"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/stop" />
-
-                <Button
-                    android:id="@+id/restartButton"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/replay" />
-
-                <Button
-                    android:id="@+id/mainSaveButton"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/saveicon" />
-
-                <Button
                     android:id="@+id/loadButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/rounded_spinner_style"
                     android:padding="10dp"
+                    android:layout_marginLeft="20dp"
                     android:text="Load datas" />
 
             </LinearLayout>

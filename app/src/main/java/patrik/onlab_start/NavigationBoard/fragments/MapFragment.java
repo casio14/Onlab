@@ -44,16 +44,15 @@ import patrik.onlab_start.R;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
-    private MapView mapView;
     private GoogleMap map;
 
     private Button changeViewButton;
-//
+
     CarListAdapter adapter;
     ListView carList;
 
     String followedCar="";
-//
+
     boolean followCar = false;
 
     HashMap<Long, LatLng> bsmIDs;
@@ -63,10 +62,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.map_fragment, container, false);
-//
 
-
-//
         bsmIDs = new HashMap<>();
 
         changeViewButton = (Button) view.findViewById(R.id.followButton);
@@ -118,7 +114,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onResume();
         SupportMapFragment mapFragment = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map));
         mapFragment.getMapAsync(this);
-        System.out.print("");
     }
 
     public void setMarktoCarPosition(PacketAncestor packetAncestor) {
@@ -137,9 +132,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             ldmObject = (LdmObject) packetAncestor.getObject();
         }
 
-        if(isLdm) {
+        if(isLdm && !ldmObject.isLocal()) {
             if (bsmIDs.get(ldmObject.getObjectID()) != null) {
-                bsmIDs.replace(ldmObject.getObjectID(), new LatLng(ldmObject.getLatitude() * 0.0000001, ldmObject.getLongitude() * 0.0000001));
+                bsmIDs.remove(ldmObject.getObjectID());
+                bsmIDs.put(ldmObject.getObjectID(),new LatLng(ldmObject.getLatitude() * 0.0000001, ldmObject.getLongitude() * 0.0000001));
             } else {
                 bsmIDs.put(ldmObject.getObjectID(), new LatLng(ldmObject.getLatitude() * 0.0000001, ldmObject.getLongitude() * 0.0000001));
             }
@@ -147,13 +143,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         else if(isFac) {
             if (bsmIDs.get(facilityNotification.getStationObject().getStationId()) != null) {
-                bsmIDs.replace(facilityNotification.getStationObject().getStationId(), new LatLng(facilityNotification.getLatitude() * 0.0000001, facilityNotification.getLongitude() * 0.0000001));
+                bsmIDs.remove(facilityNotification.getStationObject().getStationId());
+                bsmIDs.put(facilityNotification.getStationObject().getStationId(),new LatLng(facilityNotification.getLatitude() * 0.0000001, facilityNotification.getLongitude() * 0.0000001));
             } else {
                 bsmIDs.put(facilityNotification.getStationObject().getStationId(), new LatLng(facilityNotification.getLatitude() * 0.0000001, facilityNotification.getLongitude() * 0.0000001));
             }
         }
-
-        //Log.d("Longitude :" ,ldmObject.getLatitude() * 0.0000001 + "    " + ldmObject.getLongitude() * 0.0000001);
 
         adapter.clear();
         map.clear();
@@ -163,18 +158,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             adapter.addCarID(id.toString());
 
-            //Log.d("BSM ID: ", id.toString());
-
-//          if(saját) {
-//                map.addMarker(new MarkerOptions()
-//                      .position(position)
-//                      .title(id.toString())
-//                      .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-//          }
             map.addMarker(new MarkerOptions()
                     .position(position)
                     .title(id.toString())
                     .icon(BitmapDescriptorFactory.defaultMarker()));
+        }
+
+        if(isLdm && ldmObject.isLocal()) {
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(ldmObject.getLatitude() * 0.0000001, ldmObject.getLongitude() * 0.0000001))
+                    .title(ldmObject.getObjectID().toString())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+            System.out.println("LOCAL MAPPED");
         }
 
 
@@ -195,7 +190,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
 
                 map.animateCamera(cameraUpdate, 1, null);
-                System.out.println("Camera update");
             }
         }
 
@@ -211,16 +205,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         clearTimer = new Timer();
         clearTimer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d("MAP IDS CLEARED", ":::::");
-                        bsmIDs.clear();
-                        adapter.clear();
-                        if(map!=null)
-                            map.clear();
-                    }
-                });
+                if(getActivity()!=null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            bsmIDs.clear();
+                            adapter.clear();
+                            if (map != null)
+                                map.clear();
+                        }
+                    });
+                }
             }
             }
          ,0, seconds*1000);

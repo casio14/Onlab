@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -68,6 +67,11 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
     public static int DEFAULT_TARGET_PORT = 7942;
     public static MessageSet DEFAULT_MESSAGE_SET = MessageSet.D;
 
+    private long localLatitude=0;
+    private long localLongitude=0;
+
+    private int interval;
+
     private Counter counter;
 
     @Override
@@ -92,6 +96,7 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
         DEFAULT_TARGET_HOST = intent.getStringExtra("deviceAddress");
         DEFAULT_TARGET_PORT = Integer.valueOf(intent.getStringExtra("portNumber"));
         String messageSet = intent.getStringExtra("messageSet");
+        interval = Integer.valueOf(intent.getStringExtra("interval"));
         switch (messageSet) {
             case "C":
                 DEFAULT_MESSAGE_SET = MessageSet.C;
@@ -108,7 +113,7 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
         }
 
         counter = new Counter();
-        timer = new CounterTimer(counter, this, 0, 3000);
+        timer = new CounterTimer(counter, this, 0, interval*1000);
         timer.start();
 
         //Start the ITS Application
@@ -139,6 +144,8 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
                                 synchronized (facilityNotification) {
                                     PacketAncestor packet =
                                             new PacketAncestor(facilityNotification, NotificationType.FAC_NOTIFICATION);
+                                    packet.setLocalLatitude(localLatitude);
+                                    packet.setLocalLongitude(localLongitude);
                                     listFragment.adapter.addPacket(packet);
 
                                     if (!mapFragment.isNull()) {
@@ -148,7 +155,6 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
                                     counter.incrementMessageCounter();
                                     counter.incrementSnrSum(facilityNotification.getRssi());
                                 }
-                                Log.d("Facility notif received", facilityNotification.getType().toString());
                             }
                         });
                     }
@@ -160,16 +166,22 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
                             @Override
                             public void run() {
                                 synchronized (ldmObject) {
-                                    PacketAncestor packet = new PacketAncestor(ldmObject, NotificationType.LDM_NOTIFICATION);
-                                    listFragment.adapter.addPacket(packet);
-                                    if (!mapFragment.isNull()) {
-                                        mapFragment.setMarktoCarPosition(new PacketAncestor(ldmObject,NotificationType.LDM_NOTIFICATION));
+                                    if(ldmObject.isLocal()) {
+                                        localLatitude = ldmObject.getLatitude();
+                                        localLongitude = ldmObject.getLongitude();
                                     }
-
-                                    counter.incrementMessageCounter();
-                                    counter.incrementSnrSum(ldmObject.getRssiDbm());
+                                    PacketAncestor packet = new PacketAncestor(ldmObject, NotificationType.LDM_NOTIFICATION);
+                                    packet.setLocalLatitude(localLatitude);
+                                    packet.setLocalLongitude(localLongitude);
+                                    if (!mapFragment.isNull()) {
+                                        mapFragment.setMarktoCarPosition(new PacketAncestor(ldmObject, NotificationType.LDM_NOTIFICATION));
+                                    }
+                                    if(!ldmObject.isLocal()) {
+                                        listFragment.adapter.addPacket(packet);
+                                        counter.incrementMessageCounter();
+                                        counter.incrementSnrSum(ldmObject.getRssiDbm());
+                                    }
                                 }
-                                Log.d("Ldm received", ldmObject.getNotificationType().toString());
                             }
                         });
                     }
@@ -178,17 +190,17 @@ public class BoardActivity extends AppCompatActivity implements PacketCommunicat
 
                 finalItsApplication.commands().facilitySubscribeBlocking(new FacilitySubscriptionMessages().setCamIncluded(true).setDenmIncluded(true));
                 finalItsApplication.commands().ldmSubscribeBlocking(
-                        new LdmFilter().setObjectTypeFilter(LdmObjectType.MAP, LdmObjectType.SPAT, LdmObjectType.BSM)
+                        new LdmFilter().setObjectTypeFilter(LdmObjectType.MAP, LdmObjectType.SPAT, LdmObjectType.BSM).includeLocalLDMs()
                 );
 
             } catch (ClientException e) {
                 Log.d("ClientException: ", "Cannot execute API commands (Failed to subscribe to event notifications)");
-                Snackbar.make(getCurrentFocus(), "Cannot execute API commands (Failed to subscribe to event notifications", Snackbar.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Cannot execute API commands (Failed to subscribe to event notifications", Toast.LENGTH_LONG).show();
             }
 
         } catch (InterruptedException | ClientException | TimeoutException e) {
             e.printStackTrace();
-            Snackbar.make(getCurrentFocus(), "Error", Snackbar.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Error", Toast.LENGTH_LONG).show();
             finish();
             return;
         } finally {

@@ -10,6 +10,8 @@ public class PacketAncestor {
     Object object;
     NotificationType notificationType; //Facility, LDM
     int selected = 0;
+    long localLatitude=0;
+    long localLongitude=0;
 
     public PacketAncestor(Object object, NotificationType notificationType) {
         this.object = object;
@@ -30,5 +32,21 @@ public class PacketAncestor {
 
     public void setSelected(int selected) {
         this.selected = selected;
+    }
+
+    public long getLocalLatitude() {
+        return localLatitude;
+    }
+
+    public void setLocalLatitude(long localLatitude) {
+        this.localLatitude = localLatitude;
+    }
+
+    public long getLocalLongitude() {
+        return localLongitude;
+    }
+
+    public void setLocalLongitude(long localLongitude) {
+        this.localLongitude = localLongitude;
     }
 }
